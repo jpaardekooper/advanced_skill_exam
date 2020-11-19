@@ -27,4 +27,8 @@ class AuthController {
   Future resetPass(String email) {
     return _authRepository.resetPass(email);
   }
+
+  Future deleteUser(String email, String password) {
+    return _authRepository.deleteUser(email, password);
+  }
 }

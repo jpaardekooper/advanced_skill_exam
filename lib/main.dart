@@ -1,4 +1,4 @@
-import 'package:advanced_skill_exam/signup.dart';
+import 'package:advanced_skill_exam/screens/startup.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SignUp(),
+      home: StartUp(),
     );
   }
 }

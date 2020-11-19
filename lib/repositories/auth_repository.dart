@@ -1,7 +1,7 @@
 import 'package:advanced_skill_exam/helper/functions.dart';
 import 'package:advanced_skill_exam/models/firebase_user.dart';
 import 'package:advanced_skill_exam/repositories/auth_repository_interface.dart';
-import 'package:advanced_skill_exam/signup.dart';
+import 'package:advanced_skill_exam/screens/signup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -128,4 +128,6 @@ class AuthRepository extends IAuthRepository {
       return null;
     }
   }
+
+  Future deleteUser(String email, String password) async {}
 }

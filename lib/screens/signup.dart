@@ -48,13 +48,12 @@ class _SignUpState extends State<SignUp> {
   }
 
   checkAccountDetails() async {
-    print("data wordt opgeslagen");
     var _appUser = await _authController.signUpWithEmailAndPassword(
       _emailController.text,
       _usernameController.text,
       _passwordController.text,
     );
-    print("data is klaar met opslaan");
+
     //   .then((value) {
     if (_appUser != null) {
       /// mapping user data

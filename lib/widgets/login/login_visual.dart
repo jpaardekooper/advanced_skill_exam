@@ -1,3 +1,4 @@
+import 'package:advanced_skill_exam/screens/home.dart';
 import 'package:advanced_skill_exam/widgets/inherited/inherited_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,29 +11,29 @@ class LoginVisual extends StatelessWidget {
   Widget build(BuildContext context) {
     final data = InheritedDataProvider.of(context).data;
 
-    // Future.delayed(const Duration(seconds: 2), () {
-    //   if (data.role == "admin") {
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (BuildContext context) => InheritedDataProvider(
-    //           data: data,
-    //           child: Dashboard(),
-    //         ),
-    //       ),
-    //     );
-    //   } else {
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (BuildContext context) => InheritedDataProvider(
-    //           data: data,
-    //           child: Home(),
-    //         ),
-    //       ),
-    //     );
-    //   }
-    // });
+    Future.delayed(const Duration(seconds: 2), () {
+      if (data.role == "admin") {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => InheritedDataProvider(
+              data: data,
+              child: Home(),
+            ),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => InheritedDataProvider(
+              data: data,
+              child: Home(),
+            ),
+          ),
+        );
+      }
+    });
     return Container(
       color: Color.fromRGBO(255, 129, 128, 1),
       child: Column(
