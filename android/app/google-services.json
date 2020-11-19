@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "545114014942",
+    "firebase_url": "https://advanced-skill-exam.firebaseio.com",
+    "project_id": "advanced-skill-exam",
+    "storage_bucket": "advanced-skill-exam.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545114014942:android:91bfa860d5cb38c4adee4f",
+        "android_client_info": {
+          "package_name": "com.example.advanced_skill_exam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "545114014942-atu040mnrfeqve66li2npj2rnp8m5j4v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfgAb5pvB_dlcO-m5mW1v6_38qY9TUAK4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "545114014942-atu040mnrfeqve66li2npj2rnp8m5j4v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
