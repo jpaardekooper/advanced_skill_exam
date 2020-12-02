@@ -1,5 +1,5 @@
 import 'package:advanced_skill_exam/models/firebase_user.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 abstract class IAuthRepository {
   Future signInWithEmailAndPassword(String email, String password);
@@ -12,6 +12,4 @@ abstract class IAuthRepository {
   saveUserDetailsOnLogin(AppUser user, String password, bool rememberMe);
 
   Future resetPass(String email);
-
-  Future deleteUser(String email, String password);
 }

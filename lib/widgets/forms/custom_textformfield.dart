@@ -9,6 +9,8 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.secureText,
     this.passwordChecker,
+    this.suffixText,
+    this.hintText,
   });
 
   final TextInputType keyboardType;
@@ -17,17 +19,32 @@ class CustomTextFormField extends StatelessWidget {
   final int validator;
   final bool secureText;
   final String passwordChecker;
+  final String suffixText;
+  final String hintText;
 
-  inputDecoration() {
+  inputDecoration(BuildContext context) {
     return InputDecoration(
       filled: true,
-      //  isDense: true,
-      contentPadding: EdgeInsets.all(8),
+      suffixIcon: validator == 6
+          ? null
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                suffixText ?? "",
+                style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+      hintText: hintText ?? "",
+      contentPadding: const EdgeInsets.all(8),
       fillColor: Colors.white,
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
-          color: Colors.white,
+          color: Theme.of(context).primaryColor,
+          width: 1.0,
         ),
       ),
       errorBorder: OutlineInputBorder(
@@ -45,7 +62,7 @@ class CustomTextFormField extends StatelessWidget {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
-          color: Colors.grey[100],
+          color: Theme.of(context).primaryColor,
           width: 2.0,
         ),
       ),
@@ -62,7 +79,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 10.0),
       child: TextFormField(
         obscureText: secureText,
         textInputAction: TextInputAction.next,
@@ -71,7 +88,7 @@ class CustomTextFormField extends StatelessWidget {
         maxLines: secureText ? 1 : 5,
         minLines: 1,
         autofocus: false,
-
+        decoration: inputDecoration(context),
         //return value if theres an value otherwise reutrn error
         // mssge
         validator: (val) {
@@ -96,11 +113,18 @@ class CustomTextFormField extends StatelessWidget {
             case 5:
               return null;
               break;
+            case 6:
+              if (double.tryParse(val) != null) {
+                return null;
+              } else {
+                return 'Vul een geldig getal in';
+              }
+
+              break;
             default:
           }
           return val.isEmpty ? errorMessage : null;
         },
-        decoration: inputDecoration(),
       ),
     );
   }

@@ -1,8 +1,12 @@
 import 'package:advanced_skill_exam/controllers/auth_controller.dart';
 import 'package:advanced_skill_exam/models/firebase_user.dart';
+import 'package:advanced_skill_exam/widgets/button/confirm_orange_button.dart';
 import 'package:advanced_skill_exam/widgets/forms/custom_textformfield.dart';
 import 'package:advanced_skill_exam/widgets/inherited/inherited_widget.dart';
-import 'package:advanced_skill_exam/widgets/login/login_visual.dart';
+import 'package:advanced_skill_exam/screens/login_visual.dart';
+import 'package:advanced_skill_exam/widgets/painter/top_small_wave_painter.dart';
+import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
+import 'package:advanced_skill_exam/widgets/theme/logo_theme.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
@@ -26,7 +30,14 @@ class _SignInState extends State<SignIn> {
         rememberMe = newValue;
       });
 
+  void changeValue() {
+    setState(() {
+      rememberMe = !rememberMe;
+    });
+  }
+
   void goBack() {
+    FocusScope.of(context).unfocus();
     Navigator.pop(context);
   }
 
@@ -39,77 +50,140 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       key: _key,
-      backgroundColor: const Color.fromRGBO(255, 129, 128, 1),
-      body: Center(
+      body: SingleChildScrollView(
         child: Form(
           key: _formKey,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            width: MediaQuery.of(context).size.width,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                SizedBox(height: MediaQuery.of(context).size.height / 12),
-                Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Text("Vul hier uw e-mail adres in")),
-                // username
-                CustomTextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  textcontroller: _emailController,
-                  errorMessage: "Geen geldige e-mail adres",
-                  validator: 1,
-                  secureText: false,
+          child: Stack(
+            children: [
+              Hero(
+                tag: 'background',
+                child: CustomPaint(
+                  size: Size(size.width, size.height),
+                  painter: TopSmallWavePainter(
+                    color: ColorTheme.extraLightOrange,
+                  ),
                 ),
-                SizedBox(
-                  height: 32,
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Text("Vul hier uw wachtwoord in")),
-                // username
-                CustomTextFormField(
-                  keyboardType: TextInputType.visiblePassword,
-                  textcontroller: _passwordController,
-                  errorMessage: "Geen geldige e-mail adres",
-                  validator: 1,
-                  secureText: true,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text("Remember me"),
-                    Theme(
-                      data: Theme.of(context).copyWith(
-                        unselectedWidgetColor: Colors.white,
-                      ),
-                      child: Checkbox(
-                        value: rememberMe,
-                        onChanged: _onRememberMeChanged,
-                      ),
+              ),
+              Positioned.fill(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Center(
+                          child: LifestyleLogo(
+                            size: 100,
+                            description: "Log in met uw account",
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Vul hier uw e-mail adres in",
+                              style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.height *
+                                      0.025),
+                            ),
+
+                            // username
+                            CustomTextFormField(
+                              keyboardType: TextInputType.emailAddress,
+                              textcontroller: _emailController,
+                              errorMessage: "Geen geldige e-mail adres",
+                              validator: 1,
+                              secureText: false,
+                              hintText: 'email@example.nl',
+                            ),
+                            SizedBox(
+                              height: 32,
+                            ),
+                            Text(
+                              "Vul hier uw wachtwoord in",
+                              style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.height *
+                                      0.025),
+                            ),
+                            // username
+                            CustomTextFormField(
+                              keyboardType: TextInputType.visiblePassword,
+                              textcontroller: _passwordController,
+                              errorMessage: "Geen geldige e-mail adres",
+                              validator: 1,
+                              secureText: true,
+                            ),
+                            ListTile(
+                              autofocus: false,
+                              onTap: changeValue,
+                              contentPadding: const EdgeInsets.all(0),
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "Mij onthouden",
+                                    style: TextStyle(color: ColorTheme.grey),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: Checkbox(
+                                      value: rememberMe,
+                                      onChanged: _onRememberMeChanged,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 4,
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.all(0),
+                                onTap: goBack,
+                                title: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.arrow_back,
+                                      size: 18,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text("terug"),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            _isLoading
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : ConfirmOrangeButton(
+                                    text: "Aanmelden",
+                                    onTap: signIn,
+                                  )
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height / 18),
-                Container(
-                    margin: const EdgeInsets.only(left: 60, right: 60),
-                    child: _isLoading
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : FlatButton(
-                            onPressed: signIn, child: Text("Aanmelden"))),
-                SizedBox(
-                  height: 16,
-                ),
-                // terug
-                Container(
-                    margin: const EdgeInsets.only(left: 60, right: 60),
-                    child: FlatButton(onPressed: goBack, child: Text("Terug"))),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -117,6 +191,7 @@ class _SignInState extends State<SignIn> {
   }
 
   signIn() async {
+    FocusScope.of(context).unfocus();
     if (_formKey.currentState.validate()) {
       setState(() {
         _isLoading = true;
@@ -149,10 +224,11 @@ class _SignInState extends State<SignIn> {
       _isLoading = false;
       _key.currentState.showSnackBar(
         SnackBar(
-          backgroundColor: Colors.white,
+          duration: const Duration(seconds: 1),
+          backgroundColor: Theme.of(context).accentColor,
           content: Text(
             "Er is iets mis gegaan probeer het nog eens",
-            style: TextStyle(color: Colors.red, fontSize: 18),
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),
       );
