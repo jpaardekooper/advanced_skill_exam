@@ -25,7 +25,7 @@ class AdminModel {
         expert_email = snapshot.data()['email'],
         image = snapshot.data()['image'] ?? "",
         medical = snapshot.data()['medical'] ?? false,
-        name = snapshot.data()['userName'],
-        profession = snapshot.data()['profession'],
+        name = snapshot.data()['userName'] ?? "",
+        profession = snapshot.data()['profession'] ?? "",
         reference = snapshot.reference;
 }
