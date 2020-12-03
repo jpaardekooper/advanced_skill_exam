@@ -22,7 +22,16 @@ jobs:
 
       - name: Print Dart SDK version
         run: dart --version
-
+      
+      - name: Cloning https://github.com/flutter/flutter.git
+        run: git clone -b https://github.com/flutter/flutter.git
+      
+      - name: Add flutter to PATH
+        run: export FLUTTER_ROOT=`pwd`/flutter/bin        
+     
+      - name: Running flutter doctor
+        run: flutter doctor
+      
       - name: Install dependencies
         run: flutter pub get
 
