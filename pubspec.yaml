@@ -16,6 +16,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  google_maps_flutter: ^1.0.6
   cupertino_icons: ^1.0.0
   cached_network_image: ^2.3.3
   firebase_core: ^0.5.2
@@ -23,6 +24,17 @@ dependencies:
   cloud_firestore: ^0.14.3
   shared_preferences: ^0.5.12
   provider: ^4.3.2+2
+  #tflite: ^1.1.1
+  camera: ^0.5.8+11
+  #tflite_flutter: ^0.5.0
+  #tflite_flutter_helper: ^0.1.2
+  image: ^2.1.12
+  path_provider: ^1.6.11
+  image_picker: ^0.6.7+2
+  location: ^3.1.0
+  tflite: ^1.1.1
+  google_maps_cluster_manager: ^0.2.0
+
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +44,18 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   uses-material-design: true
+
+  assets: 
+    - assets/
+    - assets/images/
+    - assets/yolov2_tiny.tflite
+    - assets/yolov2_tiny.txt
+    - assets/ssd_mobilenet.tflite
+    - assets/ssd_mobilenet.txt
+    - assets/mobilenet_v1_1.0_224.tflite
+    - assets/mobilenet_v1_1.0_224.txt
+    - assets/posenet_mv1_075_float_from_checkpoints.tflite
+    - assets/detect.tflite
+    - assets/labelmap.txt
+    - assets/map/light.json
+    - assets/map/default.json

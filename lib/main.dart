@@ -1,33 +1,110 @@
-import 'package:advanced_skill_exam/signup.dart';
+import 'package:advanced_skill_exam/controllers/auth_controller.dart';
+import 'package:advanced_skill_exam/helper/functions.dart';
+import 'package:advanced_skill_exam/screens/startup.dart';
+import 'package:advanced_skill_exam/widgets/inherited/inherited_widget.dart';
+import 'package:advanced_skill_exam/screens/login_visual.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter/services.dart';
+import 'package:location/location.dart';
 
 void main() {
-  initializeWidgets().then((value) => runApp(MyApp()));
-}
-
-Future<void> initializeWidgets() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeFirebase();
+  loadResources();
 }
 
-Future<void> initializeFirebase() async {
+loadResources() async {
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
-  await initializeDateFormatting();
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final AuthController _authController = AuthController();
+  final Location location = Location();
+  LocationData _location;
+  bool _isLoggedin = false;
+  String _email, _password;
+  var result;
+  PermissionStatus permissionGranted;
+
+  @override
+  void initState() {
+    super.initState();
+    checkUserLoggedInStatus();
+
+    _checkPermissions();
+  }
+
+  Future<void> _checkPermissions() async {
+    if (await location.hasPermission() == PermissionStatus.granted) {
+      permissionGranted = await location.hasPermission();
+      //  setState(() {
+
+      //    });
+    } else {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted == PermissionStatus.granted) {
+        setState(() {});
+      }
+    }
+  }
+
+  Future checkUserLoggedInStatus() async {
+    await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
+      if (value ?? false) {
+        getUserInfo();
+      }
+      setState(() {
+        _isLoggedin = value;
+      });
+    });
+  }
+
+  getUserInfo() async {
+    await HelperFunctions.getUserEmailSharedPreference().then((value) {
+      _email = value;
+    });
+
+    await HelperFunctions.getUserPasswordSharedPreference().then((value) {
+      _password = value;
+    });
+
+    result =
+        await _authController.signInWithEmailAndPassword(_email, _password);
+    setState(() {});
+  }
+
+  signIn() {
+    if (result != null) {
+      return InheritedDataProvider(child: LoginVisual(), data: result);
+    } else {
+      return StartUp();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: '17039886 Jasper Paardekooper',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        brightness: Brightness.light,
+        primaryColor: const Color(0xFF456A67),
+        accentColor: const Color(0xFFFA9215),
       ),
-      home: SignUp(),
+      darkTheme: ThemeData.dark(),
+      home: (_isLoggedin ?? false)
+          //if the vallue is null (not found) change value to false
+          ? signIn()
+          : StartUp(),
     );
   }
 }

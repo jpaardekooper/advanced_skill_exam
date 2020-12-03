@@ -11,9 +11,15 @@ class AuthController {
   }
 
   Future signUpWithEmailAndPassword(
-      String email, String username, String password) {
+    String email,
+    String username,
+    String password,
+  ) {
     return _authRepository.signUpWithEmailAndPassword(
-        email, username, password);
+      email,
+      username,
+      password,
+    );
   }
 
   Future signOut(BuildContext context) {

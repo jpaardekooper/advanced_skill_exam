@@ -13,8 +13,8 @@ class AppUser {
   AppUser.fromSnapshot(DocumentSnapshot snapshot)
       : assert(snapshot != null),
         id = snapshot.id,
-        email = snapshot.data()['email'],
-        role = snapshot.data()['role'],
-        userName = snapshot.data()['userName'],
+        email = snapshot.data()['email'] ?? "",
+        role = snapshot.data()['role'] ?? "user",
+        userName = snapshot.data()['userName'] ?? "",
         reference = snapshot.reference;
 }
