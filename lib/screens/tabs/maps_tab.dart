@@ -42,8 +42,15 @@ class _MapsTabState extends State<MapsTab> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Image.asset(
+            'assets/images/poppetje1.png',
+            scale: 2.5,
           ),
         ),
       ],

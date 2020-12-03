@@ -37,66 +37,64 @@ class _AskQuestionViewState extends State<AskQuestionView> {
               ),
             ),
           ),
-          Positioned.fill(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 100),
-                  H1Text(text: "Komt in contact met experts"),
-                  //     SizedBox(height: 10),
-                  Text(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 100),
+                H1Text(text: "Komt in contact met experts"),
+                //     SizedBox(height: 10),
+                Text(
 
-                      // ignore: lines_longer_than_80_chars
-                      "Contact opnemen met een expert heeft verschillende voordelen. Als je onzeker bent over een gezondheidsrisico of als je nieuwschierig bent over hoe het advies van een expert je verder kan helpen, kan dat hier worden gedaan"),
-                  SizedBox(height: 40),
-                  SizedBox(height: 100),
-                  H1Text(text: "Een gepersonaliseerde health scan"),
-                  SizedBox(height: 10),
-                  Text(
+                    // ignore: lines_longer_than_80_chars
+                    "Contact opnemen met een expert heeft verschillende voordelen. Als je onzeker bent over een gezondheidsrisico of als je nieuwschierig bent over hoe het advies van een expert je verder kan helpen, kan dat hier worden gedaan"),
+                SizedBox(height: 40),
+                SizedBox(height: 100),
+                H1Text(text: "Een gepersonaliseerde health scan"),
+                SizedBox(height: 10),
+                Text(
 
-                      // ignore: lines_longer_than_80_chars
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse finibus condimentum purus, eget pharetra sem ultricies sed. In hac habitasse platea dictumst. Aliquam erat volutpat. Aenean tristique tortor vitae mattis feugiat. Praesent in volutpat dolor. Phasellus finibus dictum viverra. Nunc hendrerit, est vitae accumsan bibendum, dolor tellus tempor felis, cursus fringilla odio nisi et arcu."),
-                  SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.35,
-                    child: ConfirmOrangeButton(
-                      text: "Start scan",
-                      onTap: () => {
-                        Navigator.of(context).push(
-                          createRoute(
-                            ScreeningView(),
-                          ),
+                    // ignore: lines_longer_than_80_chars
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse finibus condimentum purus, eget pharetra sem ultricies sed. In hac habitasse platea dictumst. Aliquam erat volutpat. Aenean tristique tortor vitae mattis feugiat. Praesent in volutpat dolor. Phasellus finibus dictum viverra. Nunc hendrerit, est vitae accumsan bibendum, dolor tellus tempor felis, cursus fringilla odio nisi et arcu."),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.35,
+                  child: ConfirmOrangeButton(
+                    text: "Start scan",
+                    onTap: () => {
+                      Navigator.of(context).push(
+                        createRoute(
+                          ScreeningView(),
                         ),
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 75),
-                  H1Text(text: "Beschikbare experts"),
-                  FutureBuilder<List<AdminModel>>(
-                    future: _chatController.getExperts(),
-                    builder: (BuildContext context, snapshot) {
-                      List<AdminModel> _adminList = snapshot.data;
-                      if (!snapshot.hasData) {
-                        return Center(child: Text("Geen data"));
-                      } else {
-                        return ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: _adminList.length,
-                          itemBuilder: (BuildContext context, index) {
-                            AdminModel _adminModel = _adminList[index];
-                            return ExpertOptions(
-                                adminModel: _adminModel,
-                                email: _userData.data.email);
-                          },
-                        );
-                      }
+                      ),
                     },
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 75),
+                H1Text(text: "Beschikbare experts"),
+                FutureBuilder<List<AdminModel>>(
+                  future: _chatController.getExperts(),
+                  builder: (BuildContext context, snapshot) {
+                    List<AdminModel> _adminList = snapshot.data;
+                    if (!snapshot.hasData) {
+                      return Center(child: Text("Geen data"));
+                    } else {
+                      return ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: _adminList.length,
+                        itemBuilder: (BuildContext context, index) {
+                          AdminModel _adminModel = _adminList[index];
+                          return ExpertOptions(
+                              adminModel: _adminModel,
+                              email: _userData.data.email);
+                        },
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
           ),
         ],

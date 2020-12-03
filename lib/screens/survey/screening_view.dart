@@ -150,23 +150,23 @@ class _ScreeningViewState extends State<ScreeningView> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      AnimatedBuilder(
-                        animation: timerService, // listen to ChangeNotifier
-                        builder: (context, child) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('Elapsed: ${timerService.currentDuration}'),
-                            ],
-                          );
-                        },
-                      ),
                       ScreeningQnaView(
                         addController: addController,
                         addAnswer: addAnswer,
                         value: progressIndicator ?? valueforQuestion,
                         category: _categoryList[indexValue].category,
+                      ),
+                      AnimatedBuilder(
+                        animation: timerService, // listen to ChangeNotifier
+                        builder: (context, child) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Elapsed: ${timerService.currentDuration}'),
+                            ],
+                          );
+                        },
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20.0),

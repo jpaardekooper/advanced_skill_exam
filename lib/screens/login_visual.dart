@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:advanced_skill_exam/screens/admin/dashboard.dart';
 import 'package:advanced_skill_exam/screens/tabs/homepage_view.dart';
 import 'package:advanced_skill_exam/widgets/inherited/inherited_widget.dart';
 import 'package:advanced_skill_exam/widgets/painter/top_large_wave_painter.dart';
@@ -18,7 +19,7 @@ class LoginVisual extends StatelessWidget {
       MaterialPageRoute(
         builder: (BuildContext context) => InheritedDataProvider(
           data: data,
-          child: HomepageView(),
+          child: Dashboard(),
         ),
       ),
     );

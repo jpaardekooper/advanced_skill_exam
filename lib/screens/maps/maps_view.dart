@@ -2,25 +2,14 @@ import 'dart:async';
 
 import 'dart:ui';
 
+import 'package:advanced_skill_exam/models/marker_model.dart';
+import 'package:advanced_skill_exam/screens/maps/maps_single_page.dart';
+import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:flutter/services.dart' show rootBundle;
-
-class Place {
-  final String name;
-  final bool isClosed;
-
-  const Place({this.name, this.isClosed = false});
-
-  @override
-  String toString() {
-    // TODO: implement toString
-    return 'Place $name (closed : $isClosed)';
-  }
-}
 
 class MapsView extends StatefulWidget {
   MapsView({Key key}) : super(key: key);
@@ -32,13 +21,13 @@ class MapsView extends StatefulWidget {
 class _MapsViewState extends State<MapsView> {
   final Location location = Location();
 
-  LocationData _location;
+  LocationData clocation;
   StreamSubscription<LocationData> _locationSubscription;
-  String _error;
 
   Completer<GoogleMapController> _controller = Completer();
   ClusterManager _manager;
   Set<Marker> markers = Set();
+  String error;
 
   @override
   void initState() {
@@ -48,25 +37,30 @@ class _MapsViewState extends State<MapsView> {
   }
 
   ClusterManager _initClusterManager() {
-    return ClusterManager<Place>(items, _updateMarkers,
+    return ClusterManager<MarkerModel>(items, _updateMarkers,
         markerBuilder: _markerBuilder, initialZoom: _kLake.zoom);
   }
 
   void _updateMarkers(Set<Marker> markers) {
-    print('Updated ${markers.length} markers');
     setState(() {
       this.markers = markers;
     });
   }
 
-  Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
+  Future<Marker> Function(Cluster<MarkerModel>) get _markerBuilder =>
       (cluster) async {
         return Marker(
           markerId: MarkerId(cluster.getId()),
           position: cluster.location,
           onTap: () {
-            print('---- $cluster');
-            cluster.items.forEach((p) => print(p));
+            cluster.items.forEach((p) {
+              if (!cluster.isMultiple) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MapsSinglePage(place: p)));
+              }
+            });
           },
           infoWindow:
               cluster.isMultiple ? null : InfoWindow(title: cluster.getId()),
@@ -80,7 +74,9 @@ class _MapsViewState extends State<MapsView> {
 
     final PictureRecorder pictureRecorder = PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint1 = Paint()..color = Colors.red;
+    final Paint paint1 = Paint()
+      ..color =
+          size < 125 ? ColorTheme.lightGreen : Theme.of(context).accentColor;
     final Paint paint2 = Paint()..color = Colors.white;
 
     canvas.drawCircle(Offset(size / 2, size / 2), size / 2.0, paint1);
@@ -112,13 +108,13 @@ class _MapsViewState extends State<MapsView> {
   _listenLocation() async {
     _locationSubscription =
         location.onLocationChanged.handleError((dynamic err) {
-      _error = err.code;
+      error = err.code;
 
       _locationSubscription.cancel();
     }).listen((LocationData currentLocation) {
-      _error = null;
+      error = null;
 
-      _location = currentLocation;
+      clocation = currentLocation;
     });
   }
 
@@ -127,26 +123,26 @@ class _MapsViewState extends State<MapsView> {
   }
 
   void add() {
-    _manager.setItems(<ClusterItem<Place>>[
+    _manager.setItems(<ClusterItem<MarkerModel>>[
       for (int i = 0; i < 30; i++)
-        ClusterItem<Place>(LatLng(51.858265 + i * 0.01, 4.450107),
-            item: Place(name: 'New Place ${DateTime.now()}'))
+        ClusterItem<MarkerModel>(LatLng(51.858265 + i * 0.01, 4.450107),
+            item: MarkerModel(name: 'New Place ${DateTime.now()}'))
     ]);
   }
 
-  List<ClusterItem<Place>> items = [
+  List<ClusterItem<MarkerModel>> items = [
     for (int i = 0; i < 10; i++)
       ClusterItem(LatLng(51.848200 + i * 0.001, 4.419124 + i * 0.001),
-          item: Place(name: 'Place $i')),
+          item: MarkerModel(name: 'Place $i')),
     for (int i = 0; i < 10; i++)
       ClusterItem(LatLng(51.858265 - i * 0.001, 4.450107 + i * 0.001),
-          item: Place(name: 'Restaurant $i', isClosed: i % 2 == 0)),
+          item: MarkerModel(name: 'Restaurant $i', isClosed: i % 2 == 0)),
     for (int i = 0; i < 10; i++)
       ClusterItem(LatLng(51.858265 + i * 0.01, 4.450107 - i * 0.01),
-          item: Place(name: 'Bar $i')),
+          item: MarkerModel(name: 'Bar $i')),
     for (int i = 0; i < 10; i++)
       ClusterItem(LatLng(51.858265 - i * 0.1, 4.450107 - i * 0.01),
-          item: Place(name: 'Hotel $i')),
+          item: MarkerModel(name: 'Hotel $i')),
     for (int i = 0; i < 10; i++)
       ClusterItem(LatLng(51.858265 + i * 0.1, 4.450107 + i * 0.1)),
     for (int i = 0; i < 10; i++)
@@ -171,12 +167,10 @@ class _MapsViewState extends State<MapsView> {
         indexMapType = 0;
       }
     });
-    print(indexMapType);
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -193,8 +187,8 @@ class _MapsViewState extends State<MapsView> {
                     myLocationEnabled: true,
                     initialCameraPosition: _kGooglePlex,
                     markers: markers,
-                    // onCameraMove: _manager.onCameraMove,
-                    // onCameraIdle: _manager.updateMap,
+                    onCameraMove: _manager.onCameraMove,
+                    onCameraIdle: _manager.updateMap,
                     onMapCreated: (GoogleMapController controller) {
                       _controller.complete(controller);
                       _manager.setMapController(controller);

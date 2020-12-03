@@ -60,38 +60,35 @@ class CustomAnswerFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.03,
-      child: TextFormField(
-        enableInteractiveSelection: false,
-        focusNode: FocusNode(canRequestFocus: false),
-        readOnly: true,
-        autofocus: false,
-        textInputAction: TextInputAction.none,
-        controller: textcontroller,
-        keyboardType: keyboardType,
-        minLines: 1,
-        style: TextStyle(color: Colors.transparent),
-        decoration: inputDecoration(context),
-        //return value if theres an value otherwise reutrn error
-        // mssge
-        validator: (val) {
-          switch (validator) {
-            case 1:
-              return val.isEmpty ? errorMessage : null;
-              break;
-            case 2:
-              if (double.tryParse(val) != null) {
-                return null;
-              } else {
-                return 'Vul een geldig getal in';
-              }
-              break;
-            default:
-              return val.isEmpty ? errorMessage : null;
-          }
-        },
-      ),
+    return TextFormField(
+      enableInteractiveSelection: false,
+      focusNode: FocusNode(canRequestFocus: false),
+      readOnly: true,
+      autofocus: false,
+      textInputAction: TextInputAction.none,
+      controller: textcontroller,
+      keyboardType: keyboardType,
+      minLines: 1,
+      style: TextStyle(color: Colors.transparent),
+      decoration: inputDecoration(context),
+      //return value if theres an value otherwise reutrn error
+      // mssge
+      validator: (val) {
+        switch (validator) {
+          case 1:
+            return val.isEmpty ? errorMessage : null;
+            break;
+          case 2:
+            if (double.tryParse(val) != null) {
+              return null;
+            } else {
+              return 'Vul een geldig getal in';
+            }
+            break;
+          default:
+            return val.isEmpty ? errorMessage : null;
+        }
+      },
     );
   }
 }

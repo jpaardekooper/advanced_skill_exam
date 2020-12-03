@@ -82,7 +82,6 @@ class _SignUpState extends State<SignUp> {
   void resetSignInPage() {
     setState(() {
       isLoading = false;
-
       _key.currentState.showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).accentColor,

@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:advanced_skill_exam/screens/tflite/models.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -32,6 +30,7 @@ class _TensorFlowState extends State<TensorFlow> {
       cameras = await availableCameras();
       setState(() {});
     } on CameraException catch (e) {
+      return Navigator.of(context).pop(e);
       // print('Error: $e.code\nError Message: $e.message');
     }
   }

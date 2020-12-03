@@ -28,7 +28,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final AuthController _authController = AuthController();
   final Location location = Location();
-  LocationData _location;
+
   bool _isLoggedin = false;
   String _email, _password;
   var result;
