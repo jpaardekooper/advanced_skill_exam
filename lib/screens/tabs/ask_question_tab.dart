@@ -11,14 +11,14 @@ import 'package:advanced_skill_exam/widgets/transistion/route_transition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AskQuestionView extends StatefulWidget {
-  AskQuestionView({Key key}) : super(key: key);
+class AskQuestionTab extends StatefulWidget {
+  AskQuestionTab({Key key}) : super(key: key);
 
   @override
-  _AskQuestionViewState createState() => _AskQuestionViewState();
+  _AskQuestionTabState createState() => _AskQuestionTabState();
 }
 
-class _AskQuestionViewState extends State<AskQuestionView> {
+class _AskQuestionTabState extends State<AskQuestionTab> {
   final ChatController _chatController = ChatController();
 
   @override

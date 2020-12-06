@@ -34,65 +34,68 @@ class _DashboardState extends State<Dashboard>
   Widget build(BuildContext context) {
     final _userData = InheritedDataProvider.of(context);
 
-    return SafeArea(
-      child: Scaffold(
-        // backgroundColor: Colors.blue,
-        appBar: AppBar(
-          automaticallyImplyLeading:
-              MediaQuery.of(context).size.width < 1300 ? true : false,
-          title: Text("DASHBOARD"),
-          actions: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    _authController.signOut(context);
-                  },
-                  child: Icon(
-                    Icons.exit_to_app,
-                    size: 26.0,
-                  ),
-                )),
-          ],
-        ),
-        body: Row(
-          children: <Widget>[
-            MediaQuery.of(context).size.width < 1300
-                ? Container()
-                : Card(
-                    elevation: 2.0,
-                    child: Container(
-                        margin: EdgeInsets.all(0),
-                        height: MediaQuery.of(context).size.height,
-                        width: 300,
-                        color: Colors.white,
-                        child: listDrawerItems(false)),
-                  ),
-            Container(
-              width: MediaQuery.of(context).size.width < 1300
-                  ? MediaQuery.of(context).size.width
-                  : MediaQuery.of(context).size.width - 310,
-              child: InheritedDataProvider(
-                data: _userData.data,
-                child: TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: tabController,
-                  children: [
-                    DashboardOverview(),
-                    MessageOverView(
-                      userEmail: _userData.data.email,
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: SafeArea(
+        child: Scaffold(
+          // backgroundColor: Colors.blue,
+          appBar: AppBar(
+            automaticallyImplyLeading:
+                MediaQuery.of(context).size.width < 1300 ? true : false,
+            title: Text("DASHBOARD"),
+            actions: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      _authController.signOut(context);
+                    },
+                    child: Icon(
+                      Icons.exit_to_app,
+                      size: 26.0,
                     ),
-                    SurveyView()
-                  ],
+                  )),
+            ],
+          ),
+          body: Row(
+            children: <Widget>[
+              MediaQuery.of(context).size.width < 1300
+                  ? Container()
+                  : Card(
+                      elevation: 2.0,
+                      child: Container(
+                          margin: EdgeInsets.all(0),
+                          height: MediaQuery.of(context).size.height,
+                          width: 300,
+                          color: Colors.white,
+                          child: listDrawerItems(false)),
+                    ),
+              Container(
+                width: MediaQuery.of(context).size.width < 1300
+                    ? MediaQuery.of(context).size.width
+                    : MediaQuery.of(context).size.width - 310,
+                child: InheritedDataProvider(
+                  data: _userData.data,
+                  child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: tabController,
+                    children: [
+                      DashboardOverview(),
+                      MessageOverView(
+                        userEmail: _userData.data.email,
+                      ),
+                      SurveyView()
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
-        ),
+              )
+            ],
+          ),
 
-        drawer: Padding(
-            padding: EdgeInsets.only(top: 56),
-            child: Drawer(child: listDrawerItems(true))),
+          drawer: Padding(
+              padding: EdgeInsets.only(top: 56),
+              child: Drawer(child: listDrawerItems(true))),
+        ),
       ),
     );
   }

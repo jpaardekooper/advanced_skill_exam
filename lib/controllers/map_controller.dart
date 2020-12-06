@@ -1,21 +1,28 @@
-import 'package:advanced_skill_exam/models/survey_model.dart';
+import 'package:advanced_skill_exam/models/marker_model.dart';
+
 import 'package:advanced_skill_exam/repositories/map_repository.dart';
 import 'package:advanced_skill_exam/repositories/map_repository_interface.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MapController {
-  final IMapRepository _surveyRepository = MapRepository();
+import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 
-  List<SurveyModel> getSurveyList(QuerySnapshot snapshot) {
-    return _surveyRepository.getSurveyList(snapshot);
+class GMapController {
+  final IMapRepository _mapRepository = MapRepository();
+
+  Future<List<ClusterItem<MarkerModel>>> getMapMarkerList(
+      GeoPoint north, GeoPoint south) {
+    return _mapRepository.getMapMarkersList(north, south);
   }
 
-  Future<void> updateSurvey(String id, Map data, bool newItem) {
-    return _surveyRepository.updateSurvey(id, data, newItem);
+  Future<void> setMarkers() {
+    return _mapRepository.setMarkers();
+  }
+
+  Future<void> updateMarker(Map data) {
+    return _mapRepository.updateMarker(data);
   }
 
   Future<void> removeSurvey(String id) {
-    return _surveyRepository.removeSurvey(id);
+    return _mapRepository.removeSurvey(id);
   }
 }

@@ -1,10 +1,14 @@
-import 'package:advanced_skill_exam/models/survey_model.dart';
+import 'package:advanced_skill_exam/models/marker_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 
 abstract class IMapRepository {
-  List<SurveyModel> getSurveyList(QuerySnapshot snapshot);
+  Future<List<ClusterItem<MarkerModel>>> getMapMarkersList(
+      GeoPoint north, GeoPoint south);
 
-  Future<void> updateSurvey(String id, Map data, bool newItem);
+  Future<void> setMarkers();
+
+  Future<void> updateMarker(Map data);
 
   Future<void> removeSurvey(String id);
 }
