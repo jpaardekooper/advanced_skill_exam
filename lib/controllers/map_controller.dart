@@ -9,9 +9,10 @@ import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 class GMapController {
   final IMapRepository _mapRepository = MapRepository();
 
-  Future<List<ClusterItem<MarkerModel>>> getMapMarkerList(
-      GeoPoint north, GeoPoint south) {
-    return _mapRepository.getMapMarkersList(north, south);
+  Future<List<ClusterItem<MarkerModel>>> getMapMarkerList(GeoPoint topLeft,
+      GeoPoint topright, GeoPoint bottomLeft, GeoPoint bottomRight) {
+    return _mapRepository.getMapMarkersList(
+        topLeft, topright, bottomLeft, bottomRight);
   }
 
   Future<void> setMarkers() {
@@ -24,5 +25,17 @@ class GMapController {
 
   Future<void> removeSurvey(String id) {
     return _mapRepository.removeSurvey(id);
+  }
+
+  Future<void> addMarkerInfo(String userId, MarkerModel marker) {
+    return _mapRepository.addMarkerInfo(userId, marker);
+  }
+
+  Future<void> getFavoriteListOnce(String id) {
+    return _mapRepository.getFavoriteListOnce(id);
+  }
+
+  Future<void> setMarkerAsUser(MarkerModel marker) {
+    return _mapRepository.setMarkerAsUser(marker);
   }
 }

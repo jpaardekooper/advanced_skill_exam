@@ -60,7 +60,12 @@ class _ChatScreen extends State<ChatScreen> {
         title: ListTile(
           visualDensity:
               VisualDensity(horizontal: VisualDensity.maximumDensity),
-          title: H1Text(text: widget.model.name),
+          title: Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: H1Text(
+              text: widget.model.name,
+            ),
+          ),
           subtitle: Text(
             widget.model.profession,
           ),
@@ -76,7 +81,7 @@ class _ChatScreen extends State<ChatScreen> {
           ),
         ),
         backgroundColor: Colors.white,
-        centerTitle: true,
+        //    centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: widget.model.medical

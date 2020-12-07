@@ -9,15 +9,17 @@ import 'package:faker/faker.dart';
 
 class MapRepository implements IMapRepository {
   @override
-  Future<List<ClusterItem<MarkerModel>>> getMapMarkersList(
-      GeoPoint north, GeoPoint south) async {
+  Future<List<ClusterItem<MarkerModel>>> getMapMarkersList(GeoPoint topLeft,
+      GeoPoint topright, GeoPoint bottomLeft, GeoPoint bottomRight) async {
     List<MarkerModel> fetchMarkers = [];
     List<ClusterItem<MarkerModel>> loadedMarkers = [];
 
     var snapshot = await FirebaseFirestore.instance
         .collection("markers")
-        .where('location', isLessThanOrEqualTo: north)
-        .where('location', isGreaterThanOrEqualTo: south)
+        .where('location', isLessThanOrEqualTo: topLeft)
+        .where('location', isGreaterThanOrEqualTo: bottomLeft)
+        // .where('location', isGreaterThanOrEqualTo: bottomLeft)
+        // .where('location', isLessThanOrEqualTo: bottomRight)
         .get();
 
     snapshot.docs.map((DocumentSnapshot doc) {
@@ -25,15 +27,20 @@ class MapRepository implements IMapRepository {
     }).toList();
 
     for (int i = 0; i < fetchMarkers.length; i++) {
-      loadedMarkers.add(
-        ClusterItem<MarkerModel>(
-          LatLng(
-            fetchMarkers[i].location.latitude,
-            fetchMarkers[i].location.longitude,
+      if (fetchMarkers[i].lat >= bottomLeft.latitude &&
+          fetchMarkers[i].lat >= bottomRight.latitude &&
+          fetchMarkers[i].long >= bottomLeft.longitude &&
+          fetchMarkers[i].long <= bottomRight.longitude) {
+        loadedMarkers.add(
+          ClusterItem<MarkerModel>(
+            LatLng(
+              fetchMarkers[i].location.latitude,
+              fetchMarkers[i].location.longitude,
+            ),
+            item: fetchMarkers[i],
           ),
-          item: fetchMarkers[i],
-        ),
-      );
+        );
+      }
     }
 
     fetchMarkers.clear();
@@ -47,20 +54,21 @@ class MapRepository implements IMapRepository {
 
   @override
   Future<void> setMarkers() async {
-    // double randomLat = nextDouble(51.5, 53);
-    // double randomLng = nextDouble(4.2, 6.5);
-    // print('$randomLat, $randomLng');
-
-    for (int i = 0; i < 1000; i++) {
-      var test = MarkerModel(
-          name: faker.person.name(),
-          isClosed: i % 4 == 0 ? true : false,
-          location: GeoPoint(nextDouble(51.5, 53), nextDouble(4.2, 6.5)));
+    for (int i = 0; i < 2500; i++) {
+      double lat = nextDouble(51.3, 53.2);
+      double long = nextDouble(4.1, 6.6);
 
       Map<String, dynamic> data = {
-        'name': test.name,
-        'isClosed': i % 4 == 0 ? true : false,
-        'location': test.location
+        "company": faker.company.name(),
+        "info": faker.lorem.sentence(),
+        "url": faker.image.image(width: 1200, height: 900),
+        "name": faker.person.name(),
+        "email": faker.internet.email(),
+        "code": faker.currency.code(),
+        'isClosed': faker.randomGenerator.boolean(),
+        'location': GeoPoint(lat, long),
+        'lat': lat,
+        'long': long,
       };
 
       await FirebaseFirestore.instance
@@ -69,6 +77,30 @@ class MapRepository implements IMapRepository {
           .set(data)
           .catchError((e) {});
     }
+  }
+
+  @override
+  Future<void> setMarkerAsUser(MarkerModel marker) async {
+    Map<String, dynamic> data = {
+      "company": marker.company,
+      "info": marker.info,
+      "email": marker.email,
+      "code": marker.code,
+      "favorite_id": marker.id,
+      "url": marker.url,
+      "name": marker.name,
+      'location': marker.location,
+      'lat': marker.lat,
+      'long': marker.long,
+      'isClosed': marker.isClosed,
+      'datetime': DateTime.now()
+    };
+
+    await FirebaseFirestore.instance
+        .collection("markers")
+        .doc()
+        .set(data)
+        .catchError((e) {});
   }
 
   @override
@@ -87,5 +119,45 @@ class MapRepository implements IMapRepository {
         .doc(id)
         .delete()
         .catchError((e) {});
+  }
+
+  @override
+  Future<void> addMarkerInfo(String userId, MarkerModel marker) async {
+    Map<String, dynamic> data = {
+      "company": marker.company,
+      "info": marker.info,
+      "email": marker.email,
+      "code": marker.code,
+      "favorite_id": marker.id,
+      "url": marker.url,
+      "name": marker.name,
+      'location': marker.location,
+      'lat': marker.lat,
+      'long': marker.long,
+      'isClosed': marker.isClosed,
+      'datetime': DateTime.now()
+    };
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("favorite")
+        .doc()
+        .set(data)
+        .catchError((e) {});
+  }
+
+  @override
+  Future<List<MarkerModel>> getFavoriteListOnce(userId) async {
+    var snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("favorite")
+        .orderBy('datetime', descending: false)
+        .get();
+
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return (MarkerModel.fromSnapshot(doc));
+    }).toList();
   }
 }

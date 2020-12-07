@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class ScreeningSelectedAnswer extends StatefulWidget {
   ScreeningSelectedAnswer({
     Key key,
-    //@required this.question,
+    @required this.question,
     @required this.answerList,
     @required this.addAnswer,
     @required this.textController,
@@ -14,11 +14,11 @@ class ScreeningSelectedAnswer extends StatefulWidget {
   }) : super(key: key);
 
   // final Function(QuestionnaireModel) onTap;
-  // final String question;
+  final String question;
   final List<AnswerModel> answerList;
   final TextEditingController textController;
   final int i;
-  final Function(int, QuestionnaireModel) addAnswer;
+  final Function(int, QuestionnaireModel, String) addAnswer;
 
   @override
   _ScreeningSelectedAnswerState createState() =>
@@ -62,7 +62,7 @@ class _ScreeningSelectedAnswerState extends State<ScreeningSelectedAnswer> {
                     points: _answer.points ?? 0);
 
                 //          widget.onTap(answered);
-                widget.addAnswer(widget.i, answered);
+                widget.addAnswer(widget.i, answered, widget.question);
               },
               selected: selectedAnswer == _answer.option,
             );

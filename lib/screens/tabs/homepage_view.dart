@@ -1,6 +1,7 @@
 import 'package:advanced_skill_exam/screens/tabs/maps_tab.dart';
 import 'package:advanced_skill_exam/screens/tabs/settings_tab.dart';
 import 'package:advanced_skill_exam/screens/tabs/tensorflow_tab.dart';
+import 'package:advanced_skill_exam/widgets/inherited/inherited_widget.dart';
 import 'package:advanced_skill_exam/widgets/theme/bottom_navigation_logo.theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,8 @@ class _HomepageViewState extends State<HomepageView> {
 
   @override
   Widget build(BuildContext context) {
+    final data = InheritedDataProvider.of(context).data;
+
     return WillPopScope(
       onWillPop: () => Future.value(false),
       child: Scaffold(
@@ -45,7 +48,10 @@ class _HomepageViewState extends State<HomepageView> {
           builder: (BuildContext context, int value, Widget child) {
             // This builder will only get called when the counter
             // is updated.
-            return _widgetOptions.elementAt(counter.value);
+            return InheritedDataProvider(
+              data: data,
+              child: _widgetOptions.elementAt(counter.value),
+            );
           },
           valueListenable: counter,
         ),

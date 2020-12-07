@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:advanced_skill_exam/controllers/map_controller.dart';
 import 'package:advanced_skill_exam/models/marker_model.dart';
 import 'package:advanced_skill_exam/screens/maps/maps_single_page.dart';
+
 import 'package:advanced_skill_exam/widgets/painter/marker_bitmap_painter.dart';
+import 'package:advanced_skill_exam/widgets/theme/h1_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,11 @@ import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
+import 'add_new_marker.dart';
+
 class MapsView extends StatefulWidget {
-  MapsView({Key key}) : super(key: key);
+  MapsView({Key key, this.id}) : super(key: key);
+  final String id;
 
   @override
   _MapsViewState createState() => _MapsViewState();
@@ -21,31 +25,28 @@ class MapsView extends StatefulWidget {
 
 class _MapsViewState extends State<MapsView> {
   final Location location = Location();
+  final GMapController mapController = GMapController();
 
   LocationData clocation;
-
   StreamSubscription<LocationData> _locationSubscription;
-
   Completer<GoogleMapController> _controller = Completer();
-
   ClusterManager _manager;
-
   Set<Marker> markers = Set();
-
   String error;
-
-  int indexMapType = 0;
-
-  List<MapType> mapType = [MapType.hybrid, MapType.normal, MapType.satellite];
-
+  int indexMapType;
+  List<MapType> mapType;
   List<ClusterItem<MarkerModel>> items = [];
-
   Map<PolylineId, Polyline> polylines = <PolylineId, Polyline>{};
-
   List<LatLng> points = <LatLng>[];
+  GeoPoint topLeft, topright, bottomLeft, bottomRight;
+  bool loading;
 
   @override
   void initState() {
+    indexMapType = 0;
+    mapType = [MapType.hybrid, MapType.normal, MapType.satellite];
+    loading = false;
+
     _listenLocation();
     _manager = _initClusterManager();
 
@@ -53,14 +54,21 @@ class _MapsViewState extends State<MapsView> {
   }
 
   ClusterManager _initClusterManager() {
-    return ClusterManager<MarkerModel>(items, _updateMarkers,
-        markerBuilder: _markerBuilder, initialZoom: 5);
+    if (mounted) {
+      return ClusterManager<MarkerModel>(items, _updateMarkers,
+          markerBuilder: _markerBuilder, initialZoom: 5);
+    } else {
+      return null;
+    }
   }
 
   void _updateMarkers(Set<Marker> markers) {
-    setState(() {
-      this.markers = markers;
-    });
+    if (mounted) {
+      setState(() {
+        this.markers = markers;
+        loading = false;
+      });
+    }
   }
 
   _listenLocation() async {
@@ -92,13 +100,19 @@ class _MapsViewState extends State<MapsView> {
     }
   }
 
-  final GMapController mapController = GMapController();
+  void addMarker(MarkerModel data) {
+    LatLng loc = LatLng(data.lat, data.long);
+
+    items.add(ClusterItem(loc, item: data));
+
+    _manager.setItems(items);
+
+    Navigator.pop(context);
+  }
 
   // ignore: avoid_void_async
   void add() async {
-    GeoPoint north;
-    GeoPoint south;
-
+    loading = true;
     points.clear();
     final GoogleMapController controller = await _controller.future;
     await controller.getVisibleRegion().then((value) {
@@ -108,19 +122,17 @@ class _MapsViewState extends State<MapsView> {
       points.add(LatLng(value.southwest.latitude, value.northeast.longitude));
       points.add(LatLng(value.northeast.latitude, value.northeast.longitude));
 
-      north = GeoPoint(value.northeast.latitude, value.northeast.longitude);
-
-      south = GeoPoint(value.southwest.latitude, value.southwest.longitude);
+      topLeft = GeoPoint(value.northeast.latitude, value.northeast.longitude);
+      topright = GeoPoint(value.northeast.latitude, value.southwest.longitude);
+      bottomLeft =
+          GeoPoint(value.southwest.latitude, value.southwest.longitude);
+      bottomRight =
+          GeoPoint(value.southwest.latitude, value.northeast.longitude);
     });
-    addPolyline();
-    _manager.setItems(await mapController.getMapMarkerList(north, south));
-    // print(controller.getLatLng(screenCoordinate));
 
-    // _manager.setItems(<ClusterItem<MarkerModel>>[
-    //   for (int i = 0; i < 30; i++)
-    //     ClusterItem<MarkerModel>(LatLng(51.858265 + i * 0.01, 4.450107),
-    //         item: MarkerModel(name: 'New Place $i ${DateTime.now()}'))
-    // ]);
+    addPolyline();
+    _manager.setItems(await mapController.getMapMarkerList(
+        topLeft, topright, bottomLeft, bottomRight));
   }
 
   Future<Marker> Function(Cluster<MarkerModel>) get _markerBuilder =>
@@ -141,7 +153,8 @@ class _MapsViewState extends State<MapsView> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MapsSinglePage(place: p),
+                              builder: (context) =>
+                                  MapsSinglePage(id: widget.id, place: p),
                             ),
                           );
                         }
@@ -166,21 +179,12 @@ class _MapsViewState extends State<MapsView> {
 
   LatLng middlePoint;
 
-  Future<LatLng> centerMark() async {
-    // final GoogleMapController controller = await _controller.future;
-
-    // double screenWidth = MediaQuery.of(context).size.width *
-    //     MediaQuery.of(context).devicePixelRatio;
-    // double screenHeight = MediaQuery.of(context).size.height *
-    //     MediaQuery.of(context).devicePixelRatio;
-
-    // double middleX = screenWidth / 2;
-    // double middleY = screenHeight / 2;
-
-    // ScreenCoordinate screenCoordinate =
-    //     ScreenCoordinate(x: middleX.round(), y: middleY.round());
-
-    // return middlePoint = await controller.getLatLng(screenCoordinate);
+  Future<void> _refreshData() async {
+    return GMapController().getFavoriteListOnce(widget.id).then((value) {
+      setState(() {
+        return value;
+      });
+    });
   }
 
   @override
@@ -189,6 +193,74 @@ class _MapsViewState extends State<MapsView> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("Google Mapss"),
+        ),
+        endDrawer: Drawer(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    H1Text(text: "Geschiedenis"),
+                    IconButton(
+                        icon: Icon(Icons.refresh),
+                        onPressed: () {
+                          _refreshData();
+                        })
+                  ],
+                ),
+                FutureBuilder<List<MarkerModel>>(
+                  future: GMapController().getFavoriteListOnce(widget.id),
+                  builder: (context, snapshot) {
+                    List<MarkerModel> _favoriteList = snapshot.data;
+                    if (_favoriteList == null || _favoriteList.isEmpty) {
+                      return Text("geen data gevonden");
+                    } else {
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _favoriteList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            MarkerModel marker = _favoriteList[index];
+                            return ListTile(
+                              leading: Container(
+                                constraints:
+                                    BoxConstraints(maxHeight: 50, maxWidth: 50),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) => Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  imageUrl: marker.url,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              title: Text(
+                                marker.name,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              subtitle: Text(marker.time.toDate().toString()),
+                              trailing: Icon(
+                                Icons.circle,
+                                color:
+                                    marker.isClosed ? Colors.red : Colors.green,
+                              ),
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MapsSinglePage(
+                                      id: widget.id, place: marker),
+                                ),
+                              ),
+                            );
+                          });
+                    }
+                  },
+                )
+              ],
+            ),
+          ),
         ),
         body: Column(
           children: [
@@ -201,6 +273,7 @@ class _MapsViewState extends State<MapsView> {
                     myLocationEnabled: true,
                     initialCameraPosition: _kGooglePlex,
                     markers: markers,
+                    zoomControlsEnabled: false,
                     onCameraMove: _manager.onCameraMove,
                     onCameraIdle: _manager.updateMap,
                     onMapCreated: (GoogleMapController controller) {
@@ -215,28 +288,118 @@ class _MapsViewState extends State<MapsView> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child: FlatButton(
-                        onPressed: () => add(), child: Text("Press me")),
+                  loading
+                      ? Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            width: 140,
+                            //   color: Colors.blue,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  height: 50,
+                                ),
+                                Text("Markers worden opgehaald"),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: LinearProgressIndicator(),
+                                ),
+                              ],
+                            ),
+                          ))
+                      : Container(),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.close,
+                      color: Theme.of(context).accentColor,
+                    ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 60.0),
-                    child: FlatButton(
-                        onPressed: () => centerMark(),
-                        child: Text("center view")),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0, top: 70),
+                      child: Material(
+                        //    radius: 25,
+                        color: Colors.grey[100],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(color: Colors.grey)),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.search,
+                          ),
+                          onPressed: () {
+                            add();
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0, top: 140),
+                      child: Material(
+                        //    radius: 25,
+                        color: Colors.grey[100],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(color: Colors.grey)),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.map_outlined,
+                          ),
+                          onPressed: () {
+                            changeStyle();
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0, top: 220),
+                      child: Material(
+                        //    radius: 25,
+                        color: Colors.grey[100],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(color: Colors.grey)),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.clear,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              items.clear();
+                            });
+                          },
+                        ),
+                      ),
+                    ),
                   ),
                   Align(
                     alignment: Alignment.topRight,
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 90.0,
-                        right: 15,
+                      padding: const EdgeInsets.only(right: 20.0, top: 70),
+                      child: Material(
+                        //    radius: 25,
+                        color: Colors.grey[100],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(color: Colors.grey)),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.zoom_in,
+                          ),
+                          onPressed: () async {
+                            await _goToTheLake();
+                          },
+                        ),
                       ),
-                      child: MaterialButton(
-                          color: Colors.grey[100],
-                          onPressed: () => changeStyle(),
-                          child: Icon(Icons.map_outlined)),
                     ),
                   ),
                 ],
@@ -245,9 +408,31 @@ class _MapsViewState extends State<MapsView> {
           ],
         ),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: _goToTheLake,
-          label: Text('To the lake!'),
-          icon: Icon(Icons.directions_boat),
+          onPressed: () async {
+            final GoogleMapController controller = await _controller.future;
+            double screenWidth = MediaQuery.of(context).size.width *
+                MediaQuery.of(context).devicePixelRatio;
+            double screenHeight = (MediaQuery.of(context).size.height - 37.5) *
+                MediaQuery.of(context).devicePixelRatio;
+
+            double middleX = screenWidth / 2;
+            double middleY = screenHeight / 2;
+
+            ScreenCoordinate screenCoordinate =
+                ScreenCoordinate(x: middleX.round(), y: middleY.round());
+
+            LatLng middlePoint = await controller.getLatLng(screenCoordinate);
+
+            await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AddNewMarker(
+                    onTap: addMarker, viewLocation: middlePoint);
+              },
+            );
+          },
+          label: Text('Voeg marker toe'),
+          icon: Icon(Icons.add),
         ),
       ),
     );
@@ -269,7 +454,9 @@ class _MapsViewState extends State<MapsView> {
   }
 
   _stopListen() async {
-    await _locationSubscription.cancel();
+    if (mounted) {
+      await _locationSubscription.cancel();
+    }
   }
 
   @override

@@ -2,6 +2,7 @@ import 'package:advanced_skill_exam/controllers/chat_controller.dart';
 import 'package:advanced_skill_exam/models/admin_model.dart';
 import 'package:advanced_skill_exam/screens/chat/chat_tab.dart';
 import 'package:advanced_skill_exam/screens/survey/screening_view.dart';
+import 'package:advanced_skill_exam/widgets/button/confirm_grey_button.dart';
 import 'package:advanced_skill_exam/widgets/button/confirm_orange_button.dart';
 import 'package:advanced_skill_exam/widgets/inherited/inherited_widget.dart';
 import 'package:advanced_skill_exam/widgets/painter/top_small_wave_painter.dart';
@@ -43,15 +44,15 @@ class _AskQuestionTabState extends State<AskQuestionTab> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 100),
-                H1Text(text: "Komt in contact met experts"),
+                H1Text(text: "Lorem ipsum dolor sit amet, consectetur"),
                 //     SizedBox(height: 10),
                 Text(
 
                     // ignore: lines_longer_than_80_chars
-                    "Contact opnemen met een expert heeft verschillende voordelen. Als je onzeker bent over een gezondheidsrisico of als je nieuwschierig bent over hoe het advies van een expert je verder kan helpen, kan dat hier worden gedaan"),
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse finibus condimentum purus, eget pharetra sem ultricies sed. In hac habitasse platea dictumst"),
                 SizedBox(height: 40),
                 SizedBox(height: 100),
-                H1Text(text: "Een gepersonaliseerde health scan"),
+                H1Text(text: "Lorem ipsum dolor sit amet"),
                 SizedBox(height: 10),
                 Text(
 
@@ -60,12 +61,12 @@ class _AskQuestionTabState extends State<AskQuestionTab> {
                 SizedBox(height: 20),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.35,
-                  child: ConfirmOrangeButton(
+                  child: ConfirmGreyButton(
                     text: "Start scan",
                     onTap: () => {
                       Navigator.of(context).push(
                         createRoute(
-                          ScreeningView(),
+                          ScreeningView(userId: _userData.data.id),
                         ),
                       ),
                     },
@@ -116,8 +117,8 @@ class ExpertOptions extends StatelessWidget {
       padding: EdgeInsets.all(25),
       decoration: BoxDecoration(
         color: adminModel.medical
-            ? const Color(0xFFEFFAF6)
-            : const Color(0xFFFFF4E6),
+            ? ColorTheme.extraLightGreen
+            : ColorTheme.extraLightGreen,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -129,8 +130,8 @@ class ExpertOptions extends StatelessWidget {
                 // backgroundImage: NetworkImage(adminModel.image),
                 child: Icon(Icons.person),
                 backgroundColor: adminModel.medical
-                    ? const Color(0xFFA1CFBE)
-                    : const Color(0xFFFFDFB9),
+                    ? ColorTheme.lightGreen
+                    : ColorTheme.lightGreen,
               ),
               SizedBox(height: 15),
               Text(
@@ -142,7 +143,7 @@ class ExpertOptions extends StatelessWidget {
           Spacer(),
           adminModel.medical
               ? ConfirmOrangeButton(
-                  text: "Message",
+                  text: "Bericht",
                   onTap: () => {
                     Navigator.push(
                       context,
@@ -156,7 +157,7 @@ class ExpertOptions extends StatelessWidget {
                   },
                 )
               : ConfirmOrangeButton(
-                  text: "Message",
+                  text: "Bericht",
                   onTap: () => {
                     Navigator.push(
                       context,

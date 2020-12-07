@@ -40,4 +40,15 @@ class SurveyRepository implements ISurveyRepository {
         .delete()
         .catchError((e) {});
   }
+
+  @override
+  Future<void> addSurveyData(String userId, Map data) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("results")
+        .doc()
+        .set(data)
+        .catchError((e) {});
+  }
 }

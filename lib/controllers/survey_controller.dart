@@ -21,4 +21,8 @@ class SurveyController {
   Future<void> removeSurvey(String id) {
     return _surveyRepository.removeSurvey(id);
   }
+
+  Future<void> addSurveyData(String userId, Map data) {
+    return _surveyRepository.addSurveyData(userId, data);
+  }
 }

@@ -26,7 +26,7 @@ class LoginVisual extends StatelessWidget {
   }
 
   void goToWelcomePage(BuildContext context, var data) {
-    Navigator.pushAndRemoveUntil(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => InheritedDataProvider(
@@ -34,7 +34,6 @@ class LoginVisual extends StatelessWidget {
           child: HomepageView(),
         ),
       ),
-      ModalRoute.withName('/'),
     );
   }
 

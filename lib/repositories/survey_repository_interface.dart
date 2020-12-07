@@ -9,4 +9,6 @@ abstract class ISurveyRepository {
   Future<void> updateSurvey(String id, Map data, bool newItem);
 
   Future<void> removeSurvey(String id);
+
+  Future<void> addSurveyData(String userId, Map data);
 }

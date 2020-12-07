@@ -21,7 +21,7 @@ class ScreeningQnaView extends StatelessWidget {
 
   final String category;
 
-  final Function(int, QuestionnaireModel) addAnswer;
+  final Function(int, QuestionnaireModel, String) addAnswer;
 
   final QuestionnaireController _questionnaireController =
       QuestionnaireController();
@@ -41,6 +41,7 @@ class ScreeningQnaView extends StatelessWidget {
         } else {
           return ScreeningSelectedAnswer(
             //    question: question.question,
+            question: question.question,
             addAnswer: addAnswer,
             answerList: _answerList,
             textController: textControllerList[i],

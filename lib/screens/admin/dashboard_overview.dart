@@ -1,11 +1,8 @@
-import 'package:advanced_skill_exam/controllers/map_controller.dart';
 import 'package:flutter/material.dart';
 
 class DashboardOverview extends StatelessWidget {
-  GMapController _mapController = GMapController();
-
   void addMarkers() {
-    _mapController.setMarkers();
+    //  _mapController.setMarkers();
   }
 
   @override
