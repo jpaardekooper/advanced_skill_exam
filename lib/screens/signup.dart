@@ -3,6 +3,7 @@ import 'package:advanced_skill_exam/screens/login_visual.dart';
 import 'package:advanced_skill_exam/widgets/button/confirm_orange_button.dart';
 import 'package:advanced_skill_exam/widgets/forms/custom_textformfield.dart';
 import 'package:advanced_skill_exam/widgets/inherited/inherited_widget.dart';
+import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
 import 'package:advanced_skill_exam/widgets/theme/logo_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -84,7 +85,7 @@ class _SignUpState extends State<SignUp> {
       isLoading = false;
       _key.currentState.showSnackBar(
         SnackBar(
-          backgroundColor: Theme.of(context).accentColor,
+          backgroundColor: ColorTheme.accentOrange,
           content: Text(
             "Er is iets misgegaan",
             style: TextStyle(color: Colors.white, fontSize: 14),

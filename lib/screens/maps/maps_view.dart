@@ -4,6 +4,7 @@ import 'package:advanced_skill_exam/models/marker_model.dart';
 import 'package:advanced_skill_exam/screens/maps/maps_single_page.dart';
 
 import 'package:advanced_skill_exam/widgets/painter/marker_bitmap_painter.dart';
+import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
 import 'package:advanced_skill_exam/widgets/theme/h1_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -89,7 +90,7 @@ class _MapsViewState extends State<MapsView> {
 
     final Polyline polyline = Polyline(
       polylineId: polylineId,
-      color: Theme.of(context).accentColor,
+      color: ColorTheme.accentOrange,
       width: 3,
       points: points,
     );
@@ -313,7 +314,7 @@ class _MapsViewState extends State<MapsView> {
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.close,
-                      color: Theme.of(context).accentColor,
+                      color: ColorTheme.accentOrange,
                     ),
                   ),
                   Align(
@@ -375,6 +376,7 @@ class _MapsViewState extends State<MapsView> {
                           onPressed: () {
                             setState(() {
                               items.clear();
+                              _manager.setItems(items);
                             });
                           },
                         ),

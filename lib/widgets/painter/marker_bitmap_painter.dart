@@ -11,8 +11,7 @@ Future<BitmapDescriptor> getMarkerBitmap(int size, BuildContext context,
   final PictureRecorder pictureRecorder = PictureRecorder();
   final Canvas canvas = Canvas(pictureRecorder);
   final Paint paint1 = Paint()
-    ..color =
-        size < 125 ? ColorTheme.lightGreen : Theme.of(context).accentColor;
+    ..color = size < 125 ? ColorTheme.lightGreen : ColorTheme.accentOrange;
   final Paint paint2 = Paint()..color = Colors.white;
 
   canvas.drawCircle(Offset(size / 2, size / 2), size / 2.0, paint1);

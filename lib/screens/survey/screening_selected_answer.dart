@@ -1,6 +1,7 @@
 import 'package:advanced_skill_exam/models/questionnaire_model.dart';
 import 'package:advanced_skill_exam/repositories/answer_model.dart';
 import 'package:advanced_skill_exam/widgets/forms/custom_answerfield.dart';
+import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
 import 'package:flutter/material.dart';
 
 class ScreeningSelectedAnswer extends StatefulWidget {
@@ -49,7 +50,7 @@ class _ScreeningSelectedAnswerState extends State<ScreeningSelectedAnswer> {
               //   dense: true,
               value: _answer.option,
               groupValue: selectedAnswer,
-              activeColor: Theme.of(context).accentColor,
+              activeColor: ColorTheme.accentOrange,
               title: Text(_answer.option),
               onChanged: (value) {
                 setState(() {

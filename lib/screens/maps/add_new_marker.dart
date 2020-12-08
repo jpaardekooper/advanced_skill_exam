@@ -1,6 +1,7 @@
 import 'package:advanced_skill_exam/controllers/map_controller.dart';
 import 'package:advanced_skill_exam/models/marker_model.dart';
 import 'package:advanced_skill_exam/widgets/forms/custom_textformfield.dart';
+import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
 import 'package:advanced_skill_exam/widgets/theme/h1_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:faker/faker.dart';
@@ -53,7 +54,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
       MarkerModel newMapMarker = MarkerModel(
         company: nameController.text,
         info: nameController1.text,
-        url: faker.image.image(),
+        url: nameController2.text,
         email: nameController3.text,
         code: nameController4.text,
         name: nameController5.text,
@@ -68,7 +69,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
       GMapController().setMarkerAsUser(newMapMarker).then((value) {
         widget.onTap(newMapMarker);
       });
-    } else {}
+    }
   }
 
   void autofill() {
@@ -119,16 +120,16 @@ class _AddNewMarkerState extends State<AddNewMarker> {
                 errorMessage: "Geen geldige gebruikersnaam",
                 validator: 1,
                 secureText: false,
-                hintText: 'Hiermee kunnen wij u aanspreken',
+                hintText: '',
               ),
               Text("Bedrijfs quote:"),
               CustomTextFormField(
                 keyboardType: TextInputType.visiblePassword,
                 textcontroller: nameController1,
-                errorMessage: "Geen geldige gebruikersnaam",
+                errorMessage: "",
                 validator: 1,
                 secureText: false,
-                hintText: 'Hiermee kunnen wij u aanspreken',
+                hintText: '',
               ),
               Text("Foto"),
               CustomTextFormField(
@@ -137,7 +138,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
                 errorMessage: "Geen geldige gebruikersnaam",
                 validator: 1,
                 secureText: false,
-                hintText: 'Hiermee kunnen wij u aanspreken',
+                hintText: '',
               ),
               Text("Email:"),
               CustomTextFormField(
@@ -155,7 +156,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
                 errorMessage: "Geen geldige gebruikersnaam",
                 validator: 1,
                 secureText: false,
-                hintText: 'Hiermee kunnen wij u aanspreken',
+                hintText: '',
               ),
               Text("Naam"),
               CustomTextFormField(
@@ -164,7 +165,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
                 errorMessage: "Geen geldige gebruikersnaam",
                 validator: 1,
                 secureText: false,
-                hintText: 'Hiermee kunnen wij u aanspreken',
+                hintText: '',
               ),
               SizedBox(
                 height: 10,
@@ -215,7 +216,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
           onPressed: () {
             Navigator.pop(context);
           },
-          splashColor: Theme.of(context).accentColor,
+          splashColor: ColorTheme.accentOrange,
           highlightColor: Colors.transparent,
           child: Text(
             'annuleren',
@@ -224,7 +225,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
         ),
         RaisedButton(
           onPressed: () => addMarkervalidation(),
-          color: Theme.of(context).accentColor,
+          color: ColorTheme.accentOrange,
           child: Text(
             'Toevoegen',
             style: TextStyle(color: Colors.white),

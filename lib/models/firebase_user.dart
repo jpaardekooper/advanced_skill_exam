@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AppUser {
   AppUser({this.id, this.email, this.userName, this.role}) : reference = null;
 
-  String id;
-  String email;
-  String role;
-  String userName;
+  final String id;
+  final String email;
+  final String role;
+  final String userName;
 
   final DocumentReference reference;
 
@@ -17,4 +17,12 @@ class AppUser {
         role = snapshot.data()['role'] ?? "user",
         userName = snapshot.data()['userName'] ?? "",
         reference = snapshot.reference;
+
+  factory AppUser.fromJson(Map<String, dynamic> json) {
+    return AppUser(
+      email: json['email'],
+      role: json['role'],
+      userName: json['userName'],
+    );
+  }
 }

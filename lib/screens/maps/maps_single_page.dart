@@ -31,7 +31,7 @@ class _MapsSinglePageState extends State<MapsSinglePage> {
                 expandedHeight: 250.0,
                 floating: false,
                 pinned: true,
-                backgroundColor: Theme.of(context).accentColor,
+                backgroundColor: ColorTheme.accentOrange,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Text(widget.place.company,
@@ -54,7 +54,9 @@ class _MapsSinglePageState extends State<MapsSinglePage> {
                     labelColor: Colors.black87,
                     unselectedLabelColor: Colors.grey,
                     tabs: [
-                      Tab(icon: Icon(Icons.info), text: "${widget.place.id}"),
+                      Tab(
+                          icon: Icon(Icons.info),
+                          text: "${widget.place.id ?? ""}"),
                     ],
                   ),
                 ),

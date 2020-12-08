@@ -39,7 +39,7 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
           icon: Icon(Icons.arrow_back_ios),
           color: widget.model.medical
               ? Theme.of(context).primaryColor
-              : Theme.of(context).accentColor,
+              : ColorTheme.accentOrange,
           onPressed: () =>
               {FocusScope.of(context).unfocus(), Navigator.of(context).pop()},
         ),
@@ -47,7 +47,7 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
             child: Container(
               color: widget.model.medical
                   ? Theme.of(context).primaryColor
-                  : Theme.of(context).accentColor,
+                  : ColorTheme.accentOrange,
               height: 4.0,
             ),
             preferredSize: Size.fromHeight(4.0)),
@@ -111,7 +111,7 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
                   border: Border.all(
                       color: widget.model.medical
                           ? Theme.of(context).primaryColor
-                          : Theme.of(context).accentColor,
+                          : ColorTheme.accentOrange,
                       width: 3),
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -126,7 +126,7 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
                   controller: messageController,
                   cursorColor: widget.model.medical
                       ? Theme.of(context).primaryColor
-                      : Theme.of(context).accentColor,
+                      : ColorTheme.accentOrange,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,

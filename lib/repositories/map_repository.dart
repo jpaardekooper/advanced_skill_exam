@@ -86,7 +86,6 @@ class MapRepository implements IMapRepository {
       "info": marker.info,
       "email": marker.email,
       "code": marker.code,
-      "favorite_id": marker.id,
       "url": marker.url,
       "name": marker.name,
       'location': marker.location,

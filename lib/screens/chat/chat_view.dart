@@ -5,6 +5,7 @@ import 'package:advanced_skill_exam/models/admin_model.dart';
 import 'package:advanced_skill_exam/models/message_model.dart';
 import 'package:advanced_skill_exam/models/user_message_model.dart';
 import 'package:advanced_skill_exam/screens/chat/message_tile.dart';
+import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
 import 'package:advanced_skill_exam/widgets/theme/fade_transition.dart';
 import 'package:advanced_skill_exam/widgets/theme/h1_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -86,7 +87,7 @@ class _ChatScreen extends State<ChatScreen> {
           icon: Icon(Icons.arrow_back_ios),
           color: widget.model.medical
               ? Theme.of(context).primaryColor
-              : Theme.of(context).accentColor,
+              : ColorTheme.accentOrange,
           onPressed: () =>
               {FocusScope.of(context).unfocus(), Navigator.of(context).pop()},
         ),
@@ -94,7 +95,7 @@ class _ChatScreen extends State<ChatScreen> {
             child: Container(
               color: widget.model.medical
                   ? Theme.of(context).primaryColor
-                  : Theme.of(context).accentColor,
+                  : ColorTheme.accentOrange,
               height: 4.0,
             ),
             preferredSize: Size.fromHeight(4.0)),
@@ -133,7 +134,7 @@ class _ChatScreen extends State<ChatScreen> {
                           textInputAction: TextInputAction.newline,
                           keyboardType: TextInputType.multiline,
                           textCapitalization: TextCapitalization.sentences,
-                          cursorColor: Theme.of(context).accentColor,
+                          cursorColor: ColorTheme.accentOrange,
                           controller: messageController,
                           decoration: InputDecoration(
                               hintText: "Typ uw bericht...",
@@ -149,8 +150,7 @@ class _ChatScreen extends State<ChatScreen> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Theme.of(context).accentColor,
-                                    width: 1.0),
+                                    color: ColorTheme.accentOrange, width: 1.0),
                                 borderRadius: BorderRadius.circular(23),
                               ),
                               contentPadding:
@@ -167,7 +167,7 @@ class _ChatScreen extends State<ChatScreen> {
                         height: 45,
                         width: 45,
                         decoration: BoxDecoration(
-                            color: Theme.of(context).accentColor,
+                            color: ColorTheme.accentOrange,
                             borderRadius: BorderRadius.circular(40)),
                         child: Icon(Icons.send, color: Colors.white),
                       ),
