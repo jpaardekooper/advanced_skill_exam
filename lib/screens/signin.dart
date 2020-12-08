@@ -225,7 +225,7 @@ class _SignInState extends State<SignIn> {
       _key.currentState.showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),
-          backgroundColor: Theme.of(context).accentColor,
+          backgroundColor: ColorTheme.accentOrange,
           content: Text(
             "Er is iets mis gegaan probeer het nog eens",
             style: TextStyle(color: Colors.white, fontSize: 18),

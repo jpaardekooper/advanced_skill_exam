@@ -11,20 +11,33 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:advanced_skill_exam/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  testWidgets('Button text widget has text', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: StartUp(
+        body: Stack(
+          children: [
+            Container(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Hero(
+                        child: H1Text(
+                          text: "Welkom bij",
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    ));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('Welkom bij'), findsOneWidget);
-    expect(find.text('0'), findsNothing);
+    final titleFinder = find.text('Welkom bij');
 
-    // Tap the '+' icon and trigger a frame.
-    // await tester.tap(find.byIcon(Icons.add));
-    // await tester.pump();
-
-    // // Verify that our counter has incremented.
-    // expect(find.text('0'), findsNothing);
-    // expect(find.text('1'), findsOneWidget);
+    expect(titleFinder, findsNothing);
   });
 }

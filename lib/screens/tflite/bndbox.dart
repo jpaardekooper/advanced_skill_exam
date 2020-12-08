@@ -60,6 +60,7 @@ class BndBox extends StatelessWidget {
               ),
             ),
             child: Text(
+              // ignore: lines_longer_than_80_chars
               "${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%",
               style: TextStyle(
                 color: const Color.fromRGBO(37, 213, 253, 1.0),

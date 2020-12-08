@@ -1,5 +1,6 @@
 import 'package:advanced_skill_exam/screens/maps/maps_view.dart';
 import 'package:advanced_skill_exam/widgets/button/confirm_orange_button.dart';
+import 'package:advanced_skill_exam/widgets/inherited/inherited_widget.dart';
 import 'package:advanced_skill_exam/widgets/painter/top_large_wave_painter.dart';
 import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class MapsTab extends StatefulWidget {
 class _MapsTabState extends State<MapsTab> {
   @override
   Widget build(BuildContext context) {
+    final data = InheritedDataProvider.of(context).data;
+
     return Stack(
       children: [
         Hero(
@@ -38,12 +41,22 @@ class _MapsTabState extends State<MapsTab> {
                     text: "open maps",
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MapsView()),
+                      MaterialPageRoute(
+                          builder: (context) => MapsView(
+                                id: data.id,
+                              )),
                     ),
                   ),
                 ),
-              )
+              ),
             ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Image.asset(
+            'assets/images/poppetje1.png',
+            scale: 2.5,
           ),
         ),
       ],

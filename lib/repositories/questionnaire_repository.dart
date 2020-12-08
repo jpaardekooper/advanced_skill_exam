@@ -10,7 +10,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   Future<List<QuestionModel>> getDTDQuestion() async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("surveys")
-        .doc('UjU63gtyZX8PlajmzHhX')
+        .doc('T9W4kwyCioP6o7bQ6g3J')
         .collection("questions")
         .orderBy('order', descending: false)
         //    .where('order', isEqualTo: questionOrder)
@@ -28,13 +28,13 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("surveys")
-        .doc('UjU63gtyZX8PlajmzHhX')
+        .doc('T9W4kwyCioP6o7bQ6g3J')
         .collection("questions")
         .where("category", isEqualTo: category)
         .get();
 
     snapshot.docs.map((DocumentSnapshot doc) {
-      screeningList.add(QuestionModel.fromSnapshot(doc));
+      return screeningList.add(QuestionModel.fromSnapshot(doc));
     }).toList();
 
     screeningList.sort((a, b) => a.order.compareTo(b.order));
@@ -45,8 +45,6 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   @override
   Future<List<CategoryModel>> fetchCategories() async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection("surveys")
-        .doc('UjU63gtyZX8PlajmzHhX')
         .collection("categories")
         .orderBy('order', descending: false)
         .get();
@@ -62,7 +60,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("surveys")
-        .doc('UjU63gtyZX8PlajmzHhX')
+        .doc('T9W4kwyCioP6o7bQ6g3J')
         .collection("questions")
         .doc(id)
         .collection('answers')

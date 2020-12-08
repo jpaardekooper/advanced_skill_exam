@@ -1,12 +1,13 @@
 import 'package:advanced_skill_exam/models/questionnaire_model.dart';
 import 'package:advanced_skill_exam/repositories/answer_model.dart';
 import 'package:advanced_skill_exam/widgets/forms/custom_answerfield.dart';
+import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
 import 'package:flutter/material.dart';
 
 class ScreeningSelectedAnswer extends StatefulWidget {
   ScreeningSelectedAnswer({
     Key key,
-    //@required this.question,
+    @required this.question,
     @required this.answerList,
     @required this.addAnswer,
     @required this.textController,
@@ -14,11 +15,11 @@ class ScreeningSelectedAnswer extends StatefulWidget {
   }) : super(key: key);
 
   // final Function(QuestionnaireModel) onTap;
-  // final String question;
+  final String question;
   final List<AnswerModel> answerList;
   final TextEditingController textController;
   final int i;
-  final Function(int, QuestionnaireModel) addAnswer;
+  final Function(int, QuestionnaireModel, String) addAnswer;
 
   @override
   _ScreeningSelectedAnswerState createState() =>
@@ -49,7 +50,7 @@ class _ScreeningSelectedAnswerState extends State<ScreeningSelectedAnswer> {
               //   dense: true,
               value: _answer.option,
               groupValue: selectedAnswer,
-              activeColor: Theme.of(context).accentColor,
+              activeColor: ColorTheme.accentOrange,
               title: Text(_answer.option),
               onChanged: (value) {
                 setState(() {
@@ -62,7 +63,7 @@ class _ScreeningSelectedAnswerState extends State<ScreeningSelectedAnswer> {
                     points: _answer.points ?? 0);
 
                 //          widget.onTap(answered);
-                widget.addAnswer(widget.i, answered);
+                widget.addAnswer(widget.i, answered, widget.question);
               },
               selected: selectedAnswer == _answer.option,
             );

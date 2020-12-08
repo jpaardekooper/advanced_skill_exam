@@ -28,7 +28,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final AuthController _authController = AuthController();
   final Location location = Location();
-  LocationData _location;
+
   bool _isLoggedin = false;
   String _email, _password;
   var result;
@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: Brightness.light,
         primaryColor: const Color(0xFF456A67),
-        accentColor: const Color(0xFFFA9215),
+        // accentColor: const ,
       ),
       darkTheme: ThemeData.dark(),
       home: (_isLoggedin ?? false)

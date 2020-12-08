@@ -44,7 +44,7 @@ class ChatRepository extends IChatRepository {
   Stream<QuerySnapshot> streamUserMessage(String email) {
     return FirebaseFirestore.instance
         .collection("messages")
-        .where('ref', isNotEqualTo: "closed")
+        // .where({"ref", "!=", "closed"})
         .snapshots();
   }
 

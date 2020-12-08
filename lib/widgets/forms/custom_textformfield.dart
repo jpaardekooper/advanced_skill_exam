@@ -1,3 +1,4 @@
+import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -32,7 +33,7 @@ class CustomTextFormField extends StatelessWidget {
               child: Text(
                 suffixText ?? "",
                 style: TextStyle(
-                    color: Theme.of(context).accentColor,
+                    color: ColorTheme.accentOrange,
                     fontSize: 16,
                     fontWeight: FontWeight.bold),
               ),

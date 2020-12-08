@@ -1,10 +1,12 @@
 import 'package:advanced_skill_exam/screens/tabs/maps_tab.dart';
+import 'package:advanced_skill_exam/screens/tabs/settings_tab.dart';
 import 'package:advanced_skill_exam/screens/tabs/tensorflow_tab.dart';
+import 'package:advanced_skill_exam/widgets/inherited/inherited_widget.dart';
 import 'package:advanced_skill_exam/widgets/theme/bottom_navigation_logo.theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'ask_question_view.dart';
+import 'ask_question_tab.dart';
 
 final ValueNotifier<int> counter = ValueNotifier<int>(0);
 
@@ -20,7 +22,12 @@ class _HomepageViewState extends State<HomepageView> {
 
   @override
   void initState() {
-    _widgetOptions = <Widget>[MapsTab(), TensorflowTab(), AskQuestionView()];
+    _widgetOptions = <Widget>[
+      MapsTab(),
+      TensorflowTab(),
+      AskQuestionTab(),
+      SettingsTab(),
+    ];
     super.initState();
   }
 
@@ -32,13 +39,19 @@ class _HomepageViewState extends State<HomepageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    final data = InheritedDataProvider.of(context).data;
+
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
       child: Scaffold(
         body: ValueListenableBuilder(
           builder: (BuildContext context, int value, Widget child) {
             // This builder will only get called when the counter
             // is updated.
-            return _widgetOptions.elementAt(counter.value);
+            return InheritedDataProvider(
+              data: data,
+              child: _widgetOptions.elementAt(counter.value),
+            );
           },
           valueListenable: counter,
         ),
@@ -85,14 +98,14 @@ class _HomepageViewState extends State<HomepageView> {
                   //   ),
                   //   label: 'survey',
                   // ),
-                  // BottomNavigationBarItem(
-                  //   icon: BottomNavigationLogo(
-                  //     bottomAppIcon: HealthpointIcons.settingsIcon,
-                  //     bottomAppName: 'instellingen',
-                  //     visible: counter.value == 4,
-                  //   ),
-                  //   label: 'instellingen',
-                  // ),
+                  BottomNavigationBarItem(
+                    icon: BottomNavigationLogo(
+                      bottomAppIcon: Icons.settings,
+                      bottomAppName: 'instellingen',
+                      visible: counter.value == 3,
+                    ),
+                    label: 'instellingen',
+                  ),
                 ],
                 currentIndex: counter.value,
                 //    selectedItemColor: Colors.red[800],

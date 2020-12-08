@@ -1,6 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:advanced_skill_exam/screens/tflite/models.dart';
+import 'package:advanced_skill_exam/widgets/button/confirm_grey_button.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:tflite/tflite.dart';
@@ -32,6 +31,7 @@ class _TensorFlowState extends State<TensorFlow> {
       cameras = await availableCameras();
       setState(() {});
     } on CameraException catch (e) {
+      return Navigator.of(context).pop(e);
       // print('Error: $e.code\nError Message: $e.message');
     }
   }
@@ -101,26 +101,38 @@ class _TensorFlowState extends State<TensorFlow> {
       ),
       body: _model == ""
           ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                    child: const Text(ssd),
-                    onPressed: () => onSelect(ssd),
-                  ),
-                  RaisedButton(
-                    child: const Text(yolo),
-                    onPressed: () => onSelect(yolo),
-                  ),
-                  RaisedButton(
-                    child: const Text(mobilenet),
-                    onPressed: () => onSelect(mobilenet),
-                  ),
-                  RaisedButton(
-                    child: const Text(posenet),
-                    onPressed: () => onSelect(posenet),
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 70.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ConfirmGreyButton(
+                      text: ssd,
+                      onTap: () => onSelect(ssd),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    ConfirmGreyButton(
+                      text: yolo,
+                      onTap: () => onSelect(yolo),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    ConfirmGreyButton(
+                      text: mobilenet,
+                      onTap: () => onSelect(mobilenet),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    ConfirmGreyButton(
+                      text: posenet,
+                      onTap: () => onSelect(posenet),
+                    ),
+                  ],
+                ),
               ),
             )
           : Stack(

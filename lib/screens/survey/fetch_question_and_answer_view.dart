@@ -3,6 +3,7 @@ import 'package:advanced_skill_exam/models/questionnaire_model.dart';
 import 'package:advanced_skill_exam/repositories/answer_model.dart';
 import 'package:advanced_skill_exam/repositories/question_model.dart';
 import 'package:advanced_skill_exam/screens/survey/screening_selected_answer.dart';
+import 'package:advanced_skill_exam/widgets/theme/color_theme.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -21,7 +22,7 @@ class ScreeningQnaView extends StatelessWidget {
 
   final String category;
 
-  final Function(int, QuestionnaireModel) addAnswer;
+  final Function(int, QuestionnaireModel, String) addAnswer;
 
   final QuestionnaireController _questionnaireController =
       QuestionnaireController();
@@ -41,6 +42,7 @@ class ScreeningQnaView extends StatelessWidget {
         } else {
           return ScreeningSelectedAnswer(
             //    question: question.question,
+            question: question.question,
             addAnswer: addAnswer,
             answerList: _answerList,
             textController: textControllerList[i],
@@ -58,8 +60,9 @@ class ScreeningQnaView extends StatelessWidget {
         LinearProgressIndicator(
           value: value,
           backgroundColor: Colors.white,
-          valueColor:
-              AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+          valueColor: AlwaysStoppedAnimation<Color>(
+            ColorTheme.accentOrange,
+          ),
           minHeight: 5,
         ),
         FutureBuilder<List<QuestionModel>>(

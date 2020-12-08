@@ -1,4 +1,5 @@
 import 'package:advanced_skill_exam/controllers/questionnaire_controller.dart';
+import 'package:advanced_skill_exam/controllers/survey_controller.dart';
 import 'package:advanced_skill_exam/models/category_model.dart';
 import 'package:advanced_skill_exam/models/questionnaire_model.dart';
 import 'package:advanced_skill_exam/screens/survey/fetch_question_and_answer_view.dart';
@@ -7,7 +8,8 @@ import 'package:advanced_skill_exam/widgets/inherited/inherited_timer_service.da
 import 'package:flutter/material.dart';
 
 class ScreeningView extends StatefulWidget {
-  ScreeningView({Key key}) : super(key: key);
+  ScreeningView({Key key, @required this.userId}) : super(key: key);
+  final String userId;
 
   @override
   _ScreeningViewState createState() => _ScreeningViewState();
@@ -35,6 +37,9 @@ class _ScreeningViewState extends State<ScreeningView> {
 
   final timerService = TimerService();
 
+  List<Map<String, dynamic>> questionsFromSurvey = [];
+  int points = 0;
+
   @override
   void initState() {
     nextQuestionInQue = 1;
@@ -56,15 +61,16 @@ class _ScreeningViewState extends State<ScreeningView> {
   }
 
   void nextQuestion() {
-    for (int i = 0; i < _textControllerList.length; i++) {
-      //   print(_textControllerList[i].text);
-    }
-
     if (_formKey.currentState.validate()) {
       screeningDuration = timerService.currentDuration.inSeconds;
+      timerService.reset();
+
+      for (int i = 0; i < questionsFromSurvey.length; i++) {
+        SurveyController().addSurveyData(widget.userId, questionsFromSurvey[i]);
+      }
+
       //   print("HET HEEFT ${timerService.currentDuration.inSeconds} geduurd");
 
-      timerService.reset();
       setState(() {
         progressIndicator = valueforQuestion + 1;
         indexValue += 1;
@@ -96,9 +102,22 @@ class _ScreeningViewState extends State<ScreeningView> {
   }
 
 //check radio button with current list tile
-  void addAnswer(int index, QuestionnaireModel userAnswer) {
-    // print(index);
+  void addAnswer(int index, QuestionnaireModel userAnswer, String question) {
     _textControllerList.elementAt(index).text = userAnswer.answer;
+
+    points += userAnswer.points;
+
+    screeningDuration = timerService.currentDuration.inSeconds;
+    timerService.reset();
+    Map<String, dynamic> data = {
+      "question": question,
+      "answer": userAnswer.answer,
+      "points": userAnswer.points,
+      "duration": screeningDuration,
+      "date": DateTime.now()
+    };
+
+    questionsFromSurvey.add(data);
   }
 
   @override
@@ -132,16 +151,28 @@ class _ScreeningViewState extends State<ScreeningView> {
 
               if (indexValue > _categoryList.length - 1) {
                 return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text("Bedankt voor uw deelname"),
-                      ConfirmOrangeButton(
-                        text: "Terug",
-                        onTap: () => Navigator.of(context).pop(),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(100.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("Bedankt voor uw deelname!"),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                            // ignore: lines_longer_than_80_chars
+                            "gemiddelde cijfer: ${double.parse((points / 3).toStringAsFixed(1))}"),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        ConfirmOrangeButton(
+                          text: "Terug",
+                          onTap: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }
@@ -150,23 +181,23 @@ class _ScreeningViewState extends State<ScreeningView> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      AnimatedBuilder(
-                        animation: timerService, // listen to ChangeNotifier
-                        builder: (context, child) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('Elapsed: ${timerService.currentDuration}'),
-                            ],
-                          );
-                        },
-                      ),
                       ScreeningQnaView(
                         addController: addController,
                         addAnswer: addAnswer,
                         value: progressIndicator ?? valueforQuestion,
                         category: _categoryList[indexValue].category,
+                      ),
+                      AnimatedBuilder(
+                        animation: timerService, // listen to ChangeNotifier
+                        builder: (context, child) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Elapsed: ${timerService.currentDuration}'),
+                            ],
+                          );
+                        },
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20.0),

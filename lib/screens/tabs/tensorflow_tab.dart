@@ -49,6 +49,13 @@ class _TensorflowTabState extends State<TensorflowTab> {
             ),
           ),
         ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Image.asset(
+            'assets/images/poppetje2.png',
+            scale: 2,
+          ),
+        ),
       ],
     );
   }

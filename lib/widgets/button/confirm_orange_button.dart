@@ -25,7 +25,7 @@ class ConfirmOrangeButton extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               bottomColor ?? ColorTheme.darkOrange,
-              color ?? Theme.of(context).accentColor
+              color ?? ColorTheme.accentOrange,
             ],
             stops: [0.1, 0.1],
             begin: Alignment.bottomCenter,
