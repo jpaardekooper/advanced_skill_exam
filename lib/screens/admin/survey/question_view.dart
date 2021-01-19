@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:advanced_skill_exam/controllers/questionnaire_controller.dart';
 import 'package:advanced_skill_exam/models/survey_model.dart';
-import 'package:advanced_skill_exam/repositories/answer_model.dart';
+import 'package:advanced_skill_exam/models/answer_model.dart';
 import 'package:advanced_skill_exam/repositories/question_model.dart';
 import 'package:advanced_skill_exam/screens/admin/survey/edit_answer_dialog.dart';
 import 'package:advanced_skill_exam/screens/admin/survey/edit_question_dialog.dart';

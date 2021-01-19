@@ -11,33 +11,38 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:advanced_skill_exam/main.dart';
 
 void main() {
-  testWidgets('Button text widget has text', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: StartUp(
-        body: Stack(
-          children: [
-            Container(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Hero(
-                        child: H1Text(
-                          text: "Welkom bij",
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    ));
+  // testWidgets('Button text widget has text', (WidgetTester tester) async {
+  //   await tester.pumpWidget(MaterialApp(
+  //     home: StartUp(
+  //       body: Stack(
+  //         children: [
+  //           Container(
+  //             child: Column(
+  //               children: [
+  //                 Row(
+  //                   children: [
+  //                     Hero(
+  //                       child: H1Text(
+  //                         text: "Welkom bij",
+  //                       ),
+  //                     )
+  //                   ],
+  //                 )
+  //               ],
+  //             ),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   ));
 
-    final titleFinder = find.text('Welkom bij');
+  //   final titleFinder = find.text('Welkom bij');
 
-    expect(titleFinder, findsNothing);
+  //   expect(titleFinder, findsNothing);
+  // });
+
+  test('my first unit test', () {
+    var answer = 42;
+    expect(answer, 42);
   });
 }

@@ -42,6 +42,17 @@ class _MyAppState extends State<MyApp> {
     _checkPermissions();
   }
 
+  Future checkUserLoggedInStatus() async {
+    await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
+      if (value ?? false) {
+        getUserInfo();
+      }
+      setState(() {
+        _isLoggedin = value;
+      });
+    });
+  }
+
   Future<void> _checkPermissions() async {
     if (await location.hasPermission() == PermissionStatus.granted) {
       permissionGranted = await location.hasPermission();
@@ -54,17 +65,6 @@ class _MyAppState extends State<MyApp> {
         setState(() {});
       }
     }
-  }
-
-  Future checkUserLoggedInStatus() async {
-    await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
-      if (value ?? false) {
-        getUserInfo();
-      }
-      setState(() {
-        _isLoggedin = value;
-      });
-    });
   }
 
   getUserInfo() async {

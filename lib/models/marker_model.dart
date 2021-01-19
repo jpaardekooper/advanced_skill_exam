@@ -1,17 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MarkerModel {
-  final String id;
-  final String company;
-  final String info;
-  final String url;
-  final String name;
-  final String email;
-  final String code;
+  final String id, company, info, url, name, email, code, firebase_url;
   final bool isClosed;
   final GeoPoint location;
-  final double lat;
-  final double long;
+  final double lat, long;
   final Timestamp time;
 
   const MarkerModel(
@@ -26,7 +19,8 @@ class MarkerModel {
       this.isClosed,
       this.lat,
       this.long,
-      this.time})
+      this.time,
+      this.firebase_url})
       : reference = null;
 
   final DocumentReference reference;
@@ -46,6 +40,7 @@ class MarkerModel {
         lat = snapshot.data()['lat'] ?? 0.0,
         long = snapshot.data()['long'] ?? 0.0,
         time = snapshot.data()['datetime'] ?? Timestamp.now(),
+        firebase_url = snapshot.data()['firebase_url'] ?? "",
         reference = snapshot.reference;
 
   @override

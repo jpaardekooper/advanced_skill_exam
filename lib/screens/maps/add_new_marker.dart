@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:advanced_skill_exam/controllers/map_controller.dart';
 import 'package:advanced_skill_exam/models/marker_model.dart';
 import 'package:advanced_skill_exam/widgets/forms/custom_textformfield.dart';
@@ -8,6 +10,9 @@ import 'package:faker/faker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AddNewMarker extends StatefulWidget {
   AddNewMarker({Key key, @required this.onTap, @required this.viewLocation})
@@ -27,7 +32,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
 
   TextEditingController nameController1 = TextEditingController();
 
-  TextEditingController nameController2 = TextEditingController();
+  // TextEditingController nameController2 = TextEditingController();
 
   TextEditingController nameController3 = TextEditingController();
 
@@ -35,26 +40,47 @@ class _AddNewMarkerState extends State<AddNewMarker> {
 
   TextEditingController nameController5 = TextEditingController();
 
+  TextEditingController firebase_controller = TextEditingController();
+
   bool isOpen = false;
+
+  File _image;
+  final picker = ImagePicker();
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        _image = null;
+      }
+    });
+  }
 
   @override
   void dispose() {
     nameController.dispose();
     nameController1.dispose();
-    nameController2.dispose();
+    //   nameController2.dispose();
     nameController3.dispose();
     nameController4.dispose();
     nameController5.dispose();
+    firebase_controller.dispose();
 
     super.dispose();
   }
 
-  void addMarkervalidation() {
+  String myImgURL;
+  addMarkervalidation() async {
     if (_formKey.currentState.validate()) {
+      myImgURL = await uploadImage(_image);
+
       MarkerModel newMapMarker = MarkerModel(
         company: nameController.text,
         info: nameController1.text,
-        url: nameController2.text,
+        //   url: nameController2.text,
         email: nameController3.text,
         code: nameController4.text,
         name: nameController5.text,
@@ -63,13 +89,26 @@ class _AddNewMarkerState extends State<AddNewMarker> {
         isClosed: isOpen,
         lat: widget.viewLocation.latitude,
         long: widget.viewLocation.longitude,
+        firebase_url: myImgURL,
         time: Timestamp.now(),
       );
 
-      GMapController().setMarkerAsUser(newMapMarker).then((value) {
+      await GMapController().setMarkerAsUser(newMapMarker).then((value) {
         widget.onTap(newMapMarker);
       });
     }
+  }
+
+  Future<String> uploadImage(File img) async {
+    String fileName = basename(img.path);
+    Reference storageRef =
+        FirebaseStorage.instance.ref().child('marker_images/$fileName');
+    UploadTask uploadTask = storageRef.putFile(img);
+    TaskSnapshot taskSnapshot = await uploadTask;
+
+    return taskSnapshot.ref.getDownloadURL().then((fileURL) {
+      return fileURL;
+    });
   }
 
   void autofill() {
@@ -79,16 +118,67 @@ class _AddNewMarkerState extends State<AddNewMarker> {
       //sentence
       nameController1.text = faker.lorem.sentence();
       //image
-      nameController2.text = faker.image.image();
+      //   nameController2.text = faker.image.image();
       //email
       nameController3.text = faker.internet.email();
       //code
       nameController4.text = faker.currency.code();
       //name
       nameController5.text = faker.person.name();
+
+      firebase_controller.text = faker.image.image();
       //bool
       isOpen = faker.randomGenerator.boolean();
     });
+  }
+
+  Widget showFotoUrl(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text("Foto:"),
+        SizedBox(
+          width: 20,
+        ),
+        RaisedButton(
+          child: Text(
+            "Kies een foto",
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Theme.of(context).primaryColor,
+          onPressed: () => showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  "Kies een bron:",
+                ),
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FlatButton(
+                        child: Text("Camera"),
+                        onPressed: () {
+                          getImage();
+                          Navigator.of(context).pop();
+                        }),
+                    FlatButton(
+                      child: Text("Gallerij"),
+                      onPressed: () {
+                        getImage();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        )
+      ],
+    );
   }
 
   @override
@@ -117,7 +207,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
               CustomTextFormField(
                 keyboardType: TextInputType.visiblePassword,
                 textcontroller: nameController,
-                errorMessage: "Geen geldige gebruikersnaam",
+                errorMessage: "Geen geldige Bedrijfsnaam",
                 validator: 1,
                 secureText: false,
                 hintText: '',
@@ -126,25 +216,30 @@ class _AddNewMarkerState extends State<AddNewMarker> {
               CustomTextFormField(
                 keyboardType: TextInputType.visiblePassword,
                 textcontroller: nameController1,
-                errorMessage: "",
+                errorMessage: "Geen geldige Bedrijfs quote",
                 validator: 1,
                 secureText: false,
                 hintText: '',
               ),
               Text("Foto"),
-              CustomTextFormField(
-                keyboardType: TextInputType.visiblePassword,
-                textcontroller: nameController2,
-                errorMessage: "Geen geldige gebruikersnaam",
-                validator: 1,
-                secureText: false,
-                hintText: '',
+              showFotoUrl(context),
+              SafeArea(
+                child: _image != null
+                    ? Center(
+                        child: SizedBox(
+                            height: 200,
+                            width: 175,
+                            child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Image.file(_image))),
+                      )
+                    : Container(),
               ),
               Text("Email:"),
               CustomTextFormField(
-                keyboardType: TextInputType.visiblePassword,
+                keyboardType: TextInputType.emailAddress,
                 textcontroller: nameController3,
-                errorMessage: "Geen geldige gebruikersnaam",
+                errorMessage: "Geen geldige email",
                 validator: 1,
                 secureText: false,
                 hintText: 'Hiermee kunnen wij u aanspreken',
@@ -153,7 +248,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
               CustomTextFormField(
                 keyboardType: TextInputType.visiblePassword,
                 textcontroller: nameController4,
-                errorMessage: "Geen geldige gebruikersnaam",
+                errorMessage: "Geen geldige code",
                 validator: 1,
                 secureText: false,
                 hintText: '',
@@ -162,7 +257,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
               CustomTextFormField(
                 keyboardType: TextInputType.visiblePassword,
                 textcontroller: nameController5,
-                errorMessage: "Geen geldige gebruikersnaam",
+                errorMessage: "Geen geldige naam",
                 validator: 1,
                 secureText: false,
                 hintText: '',
@@ -219,7 +314,7 @@ class _AddNewMarkerState extends State<AddNewMarker> {
           splashColor: ColorTheme.accentOrange,
           highlightColor: Colors.transparent,
           child: Text(
-            'annuleren',
+            'Annuleren',
             style: TextStyle(color: Colors.red),
           ),
         ),

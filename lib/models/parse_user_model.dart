@@ -57,7 +57,7 @@ class Fields {
   Fields({this.email, this.userName, this.role, this.uid});
 
   Fields.fromJson(Map<String, dynamic> json) {
-    email = json['email'] != null ? Email.fromJson(json['email']) : null;
+    email = json['email'] != null ? Email.fromJson(json['email']) : "";
     userName =
         json['userName'] != null ? Email.fromJson(json['userName']) : null;
     role = json['role'] != null ? Email.fromJson(json['role']) : null;

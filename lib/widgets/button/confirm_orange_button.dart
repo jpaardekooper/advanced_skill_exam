@@ -35,9 +35,8 @@ class ConfirmOrangeButton extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         ),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 25),
           constraints: BoxConstraints(
-              minWidth: 100,
+              minWidth: 150,
               minHeight: 55.0,
               maxHeight: 55.0), // min sizes for Material buttons
           alignment: Alignment.center,

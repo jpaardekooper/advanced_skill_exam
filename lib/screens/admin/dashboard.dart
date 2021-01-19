@@ -1,5 +1,6 @@
 import 'package:advanced_skill_exam/controllers/auth_controller.dart';
 import 'package:advanced_skill_exam/screens/admin/dashboard_overview.dart';
+import 'package:advanced_skill_exam/screens/admin/markers/markers_overview.dart';
 import 'package:advanced_skill_exam/screens/admin/messages/messages_overview.dart';
 import 'package:advanced_skill_exam/screens/admin/survey/survey_view.dart';
 import 'package:advanced_skill_exam/widgets/inherited/inherited_widget.dart';
@@ -22,7 +23,7 @@ class _DashboardState extends State<Dashboard>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(vsync: this, length: 3, initialIndex: 0)
+    tabController = TabController(vsync: this, length: 4, initialIndex: 0)
       ..addListener(() {
         setState(() {
           active = tabController.index;
@@ -84,7 +85,8 @@ class _DashboardState extends State<Dashboard>
                       MessageOverView(
                         userEmail: _userData.data.email,
                       ),
-                      SurveyView()
+                      SurveyView(),
+                      MarkersOverView()
                     ],
                   ),
                 ),
@@ -181,6 +183,34 @@ class _DashboardState extends State<Dashboard>
                 ),
                 Text(
                   "Survey",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontFamily: 'HelveticaNeue',
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ),
+        FlatButton(
+          color: tabController.index == 3 ? Colors.grey[100] : Colors.white,
+          onPressed: () {
+            tabController.animateTo(3);
+            if (drawerStatus) {
+              Navigator.pop(context);
+            }
+          },
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
+              child: Row(children: [
+                Icon(Icons.category),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "Markers",
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'HelveticaNeue',

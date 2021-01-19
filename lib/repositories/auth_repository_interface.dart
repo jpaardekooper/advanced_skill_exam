@@ -9,7 +9,7 @@ abstract class IAuthRepository {
 
   Future signOut(BuildContext context);
 
-  saveUserDetailsOnLogin(AppUser user, String password, bool rememberMe);
+  Future saveUserDetailsOnLogin(AppUser user, String password, bool rememberMe);
 
   Future resetPass(String email);
 }
