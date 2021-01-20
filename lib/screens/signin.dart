@@ -191,17 +191,22 @@ class _SignInState extends State<SignIn> {
   }
 
   signIn() async {
+    //removes keyboard if its still showing
     FocusScope.of(context).unfocus();
+    //if the form validation is correct without errors
     if (_formKey.currentState.validate()) {
+      //shows loading indicator instead of 'aanmelden' button
       setState(() {
         _isLoading = true;
       });
+      //sending email and password data to the controller
       AppUser result = await _authController.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);
       if (result != null) {
+        //save user data local
         await _authController.saveUserDetailsOnLogin(
             result, _passwordController.text, rememberMe);
-
+        //push to a new screen and remove old screen
         await Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -212,9 +217,11 @@ class _SignInState extends State<SignIn> {
           ),
         );
       } else {
+        //else show error
         resetSignInPage();
       }
     } else {
+      //else show error
       resetSignInPage();
     }
   }

@@ -92,6 +92,7 @@ class MapRepository implements IMapRepository {
       'lat': marker.lat,
       'long': marker.long,
       'isClosed': marker.isClosed,
+      'firebase_url': marker.firebase_url,
       'datetime': DateTime.now()
     };
 
@@ -134,6 +135,7 @@ class MapRepository implements IMapRepository {
       'lat': marker.lat,
       'long': marker.long,
       'isClosed': marker.isClosed,
+      'firebase_url': marker.firebase_url,
       'datetime': DateTime.now()
     };
 

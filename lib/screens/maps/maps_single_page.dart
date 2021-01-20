@@ -43,7 +43,7 @@ class _MapsSinglePageState extends State<MapsSinglePage> {
                     placeholder: (context, url) => Center(
                       child: CircularProgressIndicator(),
                     ),
-                    imageUrl: widget.place.url,
+                    imageUrl: widget.place.url ?? widget.place.firebase_url,
                     fit: BoxFit.cover,
                   ),
                 ),

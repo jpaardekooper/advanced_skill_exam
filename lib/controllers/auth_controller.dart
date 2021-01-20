@@ -13,12 +13,12 @@ class AuthController {
   Future signUpWithEmailAndPassword(
     String email,
     String username,
-    String password,
+    String pass,
   ) {
     return _authRepository.signUpWithEmailAndPassword(
       email,
       username,
-      password,
+      pass,
     );
   }
 

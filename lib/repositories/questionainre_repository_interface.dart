@@ -1,5 +1,5 @@
 import 'package:advanced_skill_exam/models/category_model.dart';
-import 'package:advanced_skill_exam/repositories/answer_model.dart';
+import 'package:advanced_skill_exam/models/answer_model.dart';
 import 'package:advanced_skill_exam/repositories/question_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

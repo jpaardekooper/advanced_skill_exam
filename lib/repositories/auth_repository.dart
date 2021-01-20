@@ -9,6 +9,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthRepository extends IAuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  @override
+  Future signInWithEmailAndPassword(String email, String password) async {
+    try {
+      UserCredential authResult = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      User firebaseUser = authResult.user;
+
+      return userFromFirebaseUser(firebaseUser);
+    } on FirebaseAuthException catch (e) {
+      return null;
+    }
+  }
+
   Future<AppUser> userFromFirebaseUser(
     User user,
   ) async {
@@ -27,27 +40,6 @@ class AuthRepository extends IAuthRepository {
       return _appUser;
     } else {
       return null;
-    }
-  }
-
-  @override
-  Future signInWithEmailAndPassword(String email, String password) async {
-    try {
-      UserCredential authResult = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      User firebaseUser = authResult.user;
-
-      return userFromFirebaseUser(firebaseUser);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        // print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        //   print('Wrong password provided for that user.');
-      }
-
-      //   print('Failed with error code: ${e.code}');
-      return null;
-      // ignore: avoid_catches_without_on_clauses
     }
   }
 

@@ -38,7 +38,7 @@ class _HomeScreenState extends State<StartUp> {
               size: Size(MediaQuery.of(context).size.width,
                   MediaQuery.of(context).size.height),
               painter: TopLargeWavePainter(
-                color: ColorTheme.orange,
+                color: ColorTheme.extraLightOrange,
               ),
             ),
           ),
